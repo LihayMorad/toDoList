@@ -1,4 +1,4 @@
-package com.hit.todo.Controller;
+package com.hit.todo.controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="com.hit.todo.model.Task" table="items">
+    <class name="com.hit.todo.Model.Task" table="items">
         <id name="taskID" type="int" column="taskID">
             <generator class="increment"/>
         </id>
