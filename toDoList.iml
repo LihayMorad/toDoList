@@ -28,7 +28,29 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Tomcat 9.0.17" level="application_server_libraries" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://F:/AppacheTomcat/apache-tomcat-9.0.16/bin" />
+        </CLASSES>
+        <JAVADOC />
+        <NATIVE>
+          <root url="file://F:/AppacheTomcat/apache-tomcat-9.0.16/bin" />
+        </NATIVE>
+        <SOURCES />
+        <jarDirectory url="file://F:/AppacheTomcat/apache-tomcat-9.0.16/bin" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://F:/AppacheTomcat/apache-tomcat-9.0.16/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://F:/AppacheTomcat/apache-tomcat-9.0.16/lib" recursive="false" />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="jars_this_code_sample_uses" level="project" />
   </component>
 </module>
