@@ -1,12 +1,7 @@
 package com.hit.todo.model;
 
-import com.hit.todo.controller.HasPrimaryKey;
 import org.hibernate.*;
 import org.hibernate.cfg.AnnotationConfiguration;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import java.util.List;
 
@@ -25,25 +20,34 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
         return hibernateToDoListDAO;
     }
 
-    public boolean addItem(Object item) throws ToDoListException {
+    public boolean addItem(DBObject item) throws ToDoListException { // add Task or User
         boolean success = false;
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
-            hibernateSession.save(item);
-            hibernateSession.getTransaction().commit();
-            success = true;
+            if (shouldInsertItem(item, hibernateSession)) { // there isn't a task with the same description OR DBObject is an instance of User
+                hibernateSession.save(item);
+                hibernateSession.getTransaction().commit();
+                success = true;
+            } // else there is already a task with the same description
         } catch (HibernateException e) {
-            if (hibernateSession.getTransaction() != null) {
-                rollback(hibernateSession.getTransaction());
-            }
-            throw new ToDoListException(e.getMessage(), e.getCause());
+//            System.out.println(e.getMessage());
+//            System.out.println(e.getCause().getMessage());
+            if (hibernateSession.getTransaction() != null)
+                try {
+                    hibernateSession.getTransaction().rollback();
+                } catch (HibernateException ex) {
+                    throw new ToDoListException(ex.getMessage(), ex);
+                }
+            throw new ToDoListException(e.getMessage(), e);
         } finally {
             try {
-                if (hibernateSession != null) hibernateSession.close();
+                if (hibernateSession != null) {
+                    hibernateSession.close();
+                }
             } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e.getCause());
+                throw new ToDoListException(e.getMessage(), e);
             }
             return success;
         }
@@ -63,13 +67,19 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             }
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
-                rollback(hibernateSession.getTransaction());
-            throw new ToDoListException(e.getMessage(), e.getCause());
+                try {
+                    hibernateSession.getTransaction().rollback();
+                } catch (HibernateException ex) {
+                    throw new ToDoListException(ex.getMessage(), ex);
+                }
+            throw new ToDoListException(e.getMessage(), e);
         } finally {
             try {
-                if (hibernateSession != null) hibernateSession.close();
+                if (hibernateSession != null) {
+                    hibernateSession.close();
+                }
             } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e.getCause());
+                throw new ToDoListException(e.getMessage(), e);
             }
             return success;
         }
@@ -89,47 +99,64 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             success = updatedCount > 0;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
-                rollback(hibernateSession.getTransaction());
-            throw new ToDoListException(e.getMessage(), e.getCause());
+                try {
+                    hibernateSession.getTransaction().rollback();
+                } catch (HibernateException ex) {
+                    throw new ToDoListException(ex.getMessage(), ex);
+                }
+            throw new ToDoListException(e.getMessage(), e);
         } finally {
             try {
-                if (hibernateSession != null) hibernateSession.close();
+                if (hibernateSession != null) {
+                    hibernateSession.close();
+                }
                 return success;
             } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e.getCause());
+                throw new ToDoListException(e.getMessage(), e);
             }
         }
     }
+
     @Override
-    public List<HasPrimaryKey> getList(int listID) throws ToDoListException {
+    public List<Task> getList(int listID) throws ToDoListException {
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
             Query query = hibernateSession.createQuery("FROM Task WHERE listID=:listID");
             query.setParameter("listID", listID);
-            List<HasPrimaryKey> tasks= query.list();
+            List<Task> tasks = query.list();
             hibernateSession.getTransaction().commit();
-            return  tasks;
+            return tasks;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
-                rollback(hibernateSession.getTransaction());
-            throw new ToDoListException(e.getMessage(), e.getCause());
+                try {
+                    hibernateSession.getTransaction().rollback();
+                } catch (HibernateException ex) {
+                    throw new ToDoListException(ex.getMessage(), ex);
+                }
+            throw new ToDoListException(e.getMessage(), e);
         } finally {
             try {
                 if (hibernateSession != null) hibernateSession.close();
             } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e.getCause());
+                throw new ToDoListException(e.getMessage(), e);
             }
         }
     }
 
-    private void rollback(Transaction transaction) throws ToDoListException {
-        try {
-            transaction.rollback();
-        } catch (HibernateException e) {
-            throw new ToDoListException(e.getMessage(), e.getCause());
+    boolean shouldInsertItem(DBObject item, Session hibernateSession) {
+        boolean insert = true;
+        if (item instanceof Task) {
+            String desc = ((Task) item).getDescription();
+            Query query = hibernateSession.createQuery("FROM Task WHERE description=:desc");
+            query.setParameter("desc", desc);
+            List<Task> tasks = query.list();
+            hibernateSession.getTransaction().commit();
+            if (tasks.size() > 0) { // There is already a task with that description
+                insert = false;
+            }
         }
+        return insert;
     }
-
 }

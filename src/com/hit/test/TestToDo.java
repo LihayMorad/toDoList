@@ -14,8 +14,11 @@ public class TestToDo {
 //            printToDoList(2);
 
             int irrelevant = 0; // id is irrelevant because of auto increment ID
-            Task t1 = new Task(irrelevant, 1, "text1", false);
-            hibernateToDoListDAO.addItem(t1);
+//            Task t1 = new Task(irrelevant, 1, "text1", false);
+//            hibernateToDoListDAO.addItem(t1);
+
+            User u1 = new User("alex", "1111", 2);
+            System.out.println(hibernateToDoListDAO.addItem(u1));
 //            System.out.println("Delete success: " + hibernateToDoListDAO.deleteTask(2));
 
 //            System.out.println("Updated: " + hibernateToDoListDAO.updateTaskStatus(5, true));
@@ -23,11 +26,12 @@ public class TestToDo {
 
         } catch (ToDoListException ex) {
             System.out.println(ex.getMessage());
+            System.out.println(ex.getCause().getMessage());
             ex.printStackTrace();
         }
     }
 
-    /*public static void printToDoList(int listID) {
+    public static void printToDoList(int listID) {
         try {
 
             List<Task> list = HibernateToDoListDAO.getInstance().getList(listID);
@@ -37,5 +41,5 @@ public class TestToDo {
         } catch (ToDoListException ex) {
             System.out.println(ex.getMessage());
         }
-    }*/
+    }
 }
