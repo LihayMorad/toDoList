@@ -1,15 +1,20 @@
 package com.hit.todo.model;
 
+import com.hit.todo.controller.HasPrimaryKey;
+import org.hibernate.mapping.Collection;
+
 import java.util.List;
+import java.util.Set;
 
 public interface IToDoListDAO {
 
-    public boolean addTask(Task task) throws ToDoListException;
+    boolean addItem(Object item) throws ToDoListException;
 
-    public boolean deleteTask(int taskID) throws ToDoListException;
+     boolean deleteItem(int itemID) throws ToDoListException;
 
-    public boolean updateTaskStatus(int taskID, boolean newStatus) throws ToDoListException;
+     boolean updateStatus(int itemID, boolean newStatus) throws ToDoListException;
 
-    public List<Task> getList(int listID) throws ToDoListException;
+     List<HasPrimaryKey> getList(int listID) throws ToDoListException;
 
 }
+

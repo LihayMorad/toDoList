@@ -1,7 +1,12 @@
 package com.hit.todo.model;
 
+import com.hit.todo.controller.HasPrimaryKey;
 import org.hibernate.*;
 import org.hibernate.cfg.AnnotationConfiguration;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.util.List;
 
@@ -20,13 +25,13 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
         return hibernateToDoListDAO;
     }
 
-    public boolean addTask(Task task) throws ToDoListException {
+    public boolean addItem(Object item) throws ToDoListException {
         boolean success = false;
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
-            hibernateSession.save(task);
+            hibernateSession.save(item);
             hibernateSession.getTransaction().commit();
             success = true;
         } catch (HibernateException e) {
@@ -44,13 +49,13 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
         }
     }
 
-    public boolean deleteTask(int taskID) throws ToDoListException {
+    public boolean deleteItem(int itemID) throws ToDoListException {
         boolean success = false;
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
-            Task task = (Task) hibernateSession.get(Task.class, taskID);
+            Task task = (Task) hibernateSession.get(Task.class, itemID);
             if (task != null) { // delete only if the task exists in database
                 hibernateSession.delete(task);
                 hibernateSession.getTransaction().commit();
@@ -70,7 +75,7 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
         }
     }
 
-    public boolean updateTaskStatus(int taskID, boolean newStatus) throws ToDoListException {
+    public boolean updateStatus(int itemID, boolean newStatus) throws ToDoListException {
         boolean success = false;
         Session hibernateSession = null;
         try {
@@ -78,7 +83,7 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             hibernateSession.beginTransaction();
             Query query = hibernateSession.createQuery("UPDATE Task SET status=:newStatus WHERE taskID=:taskID");
             query.setParameter("newStatus", newStatus);
-            query.setParameter("taskID", taskID);
+            query.setParameter("taskID", itemID);
             int updatedCount = query.executeUpdate();
             hibernateSession.getTransaction().commit();
             success = updatedCount > 0;
@@ -95,17 +100,17 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             }
         }
     }
-
-    public List<Task> getList(int listID) throws ToDoListException {
+    @Override
+    public List<HasPrimaryKey> getList(int listID) throws ToDoListException {
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
             Query query = hibernateSession.createQuery("FROM Task WHERE listID=:listID");
             query.setParameter("listID", listID);
-            List<Task> list = query.list();
+            List<HasPrimaryKey> tasks= query.list();
             hibernateSession.getTransaction().commit();
-            return list;
+            return  tasks;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
                 rollback(hibernateSession.getTransaction());

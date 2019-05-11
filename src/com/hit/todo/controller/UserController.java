@@ -1,19 +1,29 @@
 package com.hit.todo.controller;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import com.hit.todo.model.ToDoListException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-@WebServlet(name = "/user/*")
-public class UserController extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+public class UserController implements  IController{
+
+    @Override
+    public void addItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    public void deleteItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException{
+
+    }
+
+    @Override
+    public void updateItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException{
+
+    }
+
+    @Override
+    public void getList(HttpServletRequest request, HttpServletResponse response)throws ToDoListException {
 
     }
 }

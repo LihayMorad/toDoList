@@ -2,6 +2,7 @@ package com.hit.test;
 
 import com.hit.todo.model.*;
 
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class TestToDo {
 
             int irrelevant = 0; // id is irrelevant because of auto increment ID
             Task t1 = new Task(irrelevant, 1, "text1", false);
-            hibernateToDoListDAO.addTask(t1);
+            hibernateToDoListDAO.addItem(t1);
 //            System.out.println("Delete success: " + hibernateToDoListDAO.deleteTask(2));
 
 //            System.out.println("Updated: " + hibernateToDoListDAO.updateTaskStatus(5, true));
@@ -26,8 +27,9 @@ public class TestToDo {
         }
     }
 
-    public static void printToDoList(int listID) {
+    /*public static void printToDoList(int listID) {
         try {
+
             List<Task> list = HibernateToDoListDAO.getInstance().getList(listID);
             System.out.println("There are " + list.size() + " item(s) in the list");
             Iterator iii = list.iterator();
@@ -35,5 +37,5 @@ public class TestToDo {
         } catch (ToDoListException ex) {
             System.out.println(ex.getMessage());
         }
-    }
+    }*/
 }
