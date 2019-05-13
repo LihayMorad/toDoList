@@ -31,9 +31,8 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
                 hibernateSession.getTransaction().commit();
                 success = true;
             } // else there is already a task with the same description
+            return success;
         } catch (HibernateException e) {
-//            System.out.println(e.getMessage());
-//            System.out.println(e.getCause().getMessage());
             if (hibernateSession.getTransaction() != null)
                 try {
                     hibernateSession.getTransaction().rollback();
@@ -49,7 +48,6 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             } catch (HibernateException e) {
                 throw new ToDoListException(e.getMessage(), e);
             }
-            return success;
         }
     }
 
@@ -65,6 +63,7 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
                 hibernateSession.getTransaction().commit();
                 success = true;
             }
+            return success;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
                 try {
@@ -81,7 +80,6 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             } catch (HibernateException e) {
                 throw new ToDoListException(e.getMessage(), e);
             }
-            return success;
         }
     }
 
@@ -97,6 +95,7 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
             int updatedCount = query.executeUpdate();
             hibernateSession.getTransaction().commit();
             success = updatedCount > 0;
+            return success;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
                 try {
@@ -110,7 +109,6 @@ public class HibernateToDoListDAO implements IToDoListDAO { // Singleton
                 if (hibernateSession != null) {
                     hibernateSession.close();
                 }
-                return success;
             } catch (HibernateException e) {
                 throw new ToDoListException(e.getMessage(), e);
             }
