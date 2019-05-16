@@ -1,5 +1,7 @@
 package com.hit.todo.model;
 
+import org.hibernate.Session;
+
 import java.util.List;
 
 public interface IToDoListDAO {

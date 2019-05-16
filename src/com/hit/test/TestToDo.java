@@ -20,7 +20,7 @@ public class TestToDo {
 //            User u1 = new User("alex", "1111", 2);
 //            System.out.println("Add user \"alex\": " + hibernateToDoListDAO.addItem(u1));
 
-            System.out.println("Deleted: " + hibernateToDoListDAO.deleteItem(2));
+            System.out.println("Deleted: " + hibernateToDoListDAO.deleteItem("vasya"));
             System.out.println("Updated: " + hibernateToDoListDAO.updateStatus(5, true));
             printToDoList(2);
 
@@ -34,7 +34,7 @@ public class TestToDo {
     public static void printToDoList(int listID) {
         try {
 
-            List<Task> list = HibernateToDoListDAO.getInstance().getList(listID);
+            List<DBObject> list = HibernateToDoListDAO.getInstance().getList(listID);
             System.out.println("There are " + list.size() + " item(s) in the list");
             Iterator iii = list.iterator();
             while (iii.hasNext()) System.out.println(iii.next());

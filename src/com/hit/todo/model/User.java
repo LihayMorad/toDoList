@@ -1,12 +1,17 @@
 package com.hit.todo.model;
 
-public class User extends DBObject {
+import java.util.List;
+import javax.persistence.Transient;
+
+
+public class User extends DBObject  {
 
     private String username;
     private String password;
     private int listID;
 
-//    private Map<String, Iaccessible> taskLog;
+    @Transient
+    private List<DBObject> taskLog;
 
     public User() {
     }
@@ -20,6 +25,8 @@ public class User extends DBObject {
     public String getUsername() {
         return username;
     }
+
+    public List<DBObject> getTaskLog() { return taskLog; }
 
     public void setUsername(String username) {
         this.username = username;
@@ -41,13 +48,9 @@ public class User extends DBObject {
         this.listID = listID;
     }
 
-//    @Override
-//    public void map() throws ToDoListException {
-//
-//           /*HibernateToDoListDAO dbinteract = HibernateToDoListDAO.getInstance();
-//           Task a = (Task)dbinteract.getList(listID).get(1);
-//
-//           taskLog = dbinteract.getList(listID).stream().collect(Collectors.toMap(Task:: getDescription, Function.identity()));*/
-//
-//    }
+    @Override
+    public String getUniqueParameter(){
+        return getUsername();
+    }
+
 }
