@@ -108,12 +108,12 @@ public abstract class APIToDoListDAO {
 
 
     protected boolean ifItemIsInDB(String uniqueParameter, Session hibernateSession) {
-        boolean exists = true;
+        boolean exists = false;
 
         List<DBObject> items = QueryToCheckIfAlreadyExists(uniqueParameter,hibernateSession).list();
             hibernateSession.getTransaction().commit();
             if (items.size() > 0) { // There is already a task with that description
-                exists = false;
+                exists = true;
             }
 
         return exists;
