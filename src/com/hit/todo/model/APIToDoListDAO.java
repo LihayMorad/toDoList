@@ -53,7 +53,8 @@ public abstract class APIToDoListDAO {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
             DBObject item = (DBObject)hibernateSession.get(DBObject.class, uniqueParameter);
-
+            //No need to check if item exists, an exception will be thrown in case of deletion of one that doesn't
+            //Then worth to think if this method might be void ( alternatively ,message can be sent from jsp file in case of success
             hibernateSession.delete(item);
             hibernateSession.getTransaction().commit();
             success = true;
