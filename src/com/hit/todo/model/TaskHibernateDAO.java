@@ -2,6 +2,8 @@ package com.hit.todo.model;
 
 import org.hibernate.*;
 
+import java.io.Serializable;
+
 public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
 
     private static TaskHibernateDAO uniqueInstance = null;
@@ -65,6 +67,12 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
          Query query=hibernateSession.createQuery("FROM Task WHERE listID=:listID");
          query.setParameter("listID", listID);
         return query;
+    }
+
+    @Override
+    protected DBObject RetrieveSingleItem(Serializable uniqueParameter,Session hibernateSession){
+        Task task = (Task) hibernateSession.get(Task.class, uniqueParameter);
+        return  task;
     }
 
 }

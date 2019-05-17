@@ -10,24 +10,31 @@ public class TestToDo {
 
     public static void main(String[] args) {
         TaskHibernateDAO hibernateToDoListDAO = TaskHibernateDAO.getInstance();
+        UserHibernateDAO dao=UserHibernateDAO.getInstance();
         try {
 //            printToDoList(2);
 
             int irrelevant = 0; // id is irrelevant because of auto increment ID
             Task t1 = new Task(irrelevant, 1, "text1", false);
+            Task t2= new Task(irrelevant,1,"text22",false);
+            User u1= new User ("alex","1111",3);
+            //hibernateToDoListDAO.deleteItem(t1.getListID());
+            dao.addItem(u1);
             hibernateToDoListDAO.addItem(t1);
+            hibernateToDoListDAO.addItem(t2);
+            List<DBObject> list = TaskHibernateDAO.getInstance().getList(1);
+            System.out.println(list.size());
 
-//            User u1 = new User("alex", "1111", 2);
 //            System.out.println("Add user \"alex\": " + hibernateToDoListDAO.addItem(u1));
 
-            System.out.println("Deleted: " + hibernateToDoListDAO.deleteItem("vasya"));
-            System.out.println("Updated: " + hibernateToDoListDAO.updateStatus(5, true));
-            printToDoList(2);
+//            System.out.println("Deleted: " + hibernateToDoListDAO.deleteItem("vasya"));
+//            System.out.println("Updated: " + hibernateToDoListDAO.updateStatus(5, true));
+//            printToDoList(2);
 
         } catch (ToDoListException ex) {
             System.out.println("Exception message: " + ex.getMessage());
-            System.out.println("Exception cause cause message: " + ex.getCause().getCause().getMessage());
-//            ex.printStackTrace();
+//            System.out.println("Exception cause cause message: " + ex.getCause().getCause().getMessage());
+            ex.printStackTrace();
         }
     }
 

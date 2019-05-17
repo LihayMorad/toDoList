@@ -10,8 +10,8 @@ public class User extends DBObject  {
     private String password;
     private int listID;
 
-    @Transient
-    private List<DBObject> taskLog;
+   /* @Transient
+    private List<DBObject> taskLog;*/
 
     public User() {
     }
@@ -26,7 +26,7 @@ public class User extends DBObject  {
         return username;
     }
 
-    public List<DBObject> getTaskLog() { return taskLog; }
+    //public List<DBObject> getTaskLog() { return taskLog; }
 
     public void setUsername(String username) {
         this.username = username;

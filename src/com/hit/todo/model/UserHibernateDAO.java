@@ -3,6 +3,8 @@ package com.hit.todo.model;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import java.io.Serializable;
+
 public class UserHibernateDAO extends APIToDoListDAO {
 
     private static UserHibernateDAO uniqueInstance;
@@ -32,7 +34,9 @@ public class UserHibernateDAO extends APIToDoListDAO {
     }
 
 
-
-
-
+    @Override
+    protected DBObject RetrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) {
+        User lamer = (User) hibernateSession.get(User.class, uniqueParameter);
+        return  lamer;
+    }
 }

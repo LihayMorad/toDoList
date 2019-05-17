@@ -25,7 +25,8 @@ public abstract class APIToDoListDAO implements IToDoListDAO{
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
-            if (!ifItemIsInDB(item.getUniqueParameter(), hibernateSession)) { // there isn't a task with the same description OR DBObject is an instance of User
+           if (!ifItemIsInDB(item.getUniqueParameter(), hibernateSession)) { // there isn't a task with the same description OR DBObject is an instance of User
+                hibernateSession.beginTransaction();
                 hibernateSession.save(item);
                 hibernateSession.getTransaction().commit();
                 success = true;
@@ -54,10 +55,10 @@ public abstract class APIToDoListDAO implements IToDoListDAO{
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
-            DBObject item = (DBObject)hibernateSession.get(DBObject.class, uniqueParameter);
+            //DBObject item = (DBObject)hibernateSession.get(DBObject.class, uniqueParameter);
             //No need to check if item exists, an exception will be thrown in case of deletion of one that doesn't
             //Then worth to think if this method might be void ( alternatively ,message can be sent from jsp file in case of success
-            hibernateSession.delete(item);
+            hibernateSession.delete(RetrieveSingleItem(uniqueParameter,hibernateSession));
             hibernateSession.getTransaction().commit();
             success = true;
 
@@ -124,7 +125,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO{
 
     abstract protected Query QueryToCheckIfAlreadyExists(String uniqueParameter,Session hibernateSession);
     abstract  protected Query QueryToFetchTheList(int listID,Session hibernateSession);//Check if it's the right type of Query
-
+    abstract  protected  DBObject RetrieveSingleItem(Serializable uniqueParameter,Session hibernateSession);
 
 
 }
