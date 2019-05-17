@@ -6,9 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class APIToDoListDAO {
+public abstract class APIToDoListDAO implements IToDoListDAO{
 
     private SessionFactory factory = null;
 
@@ -17,7 +18,7 @@ public abstract class APIToDoListDAO {
         this.factory = new AnnotationConfiguration().configure().buildSessionFactory();
     }
 
-
+   @Override
     public final boolean addItem(DBObject item) throws ToDoListException {
         boolean success = false;
         Session hibernateSession = null;
@@ -46,7 +47,8 @@ public abstract class APIToDoListDAO {
             }
         }
     }
-    public final boolean deleteItem(String uniqueParameter) throws ToDoListException{
+    @Override
+    public final boolean deleteItem(Serializable uniqueParameter) throws ToDoListException{
         boolean success = false;
         Session hibernateSession = null;
         try {
@@ -81,6 +83,7 @@ public abstract class APIToDoListDAO {
         return factory;
     }
 
+    @Override
     public final List<DBObject> getList(int listID) throws ToDoListException{
         Session hibernateSession = null;
         try {
@@ -107,7 +110,7 @@ public abstract class APIToDoListDAO {
     }
 
 
-    protected boolean ifItemIsInDB(String uniqueParameter, Session hibernateSession) {
+    private boolean ifItemIsInDB(String uniqueParameter, Session hibernateSession) {
         boolean exists = false;
 
         List<DBObject> items = QueryToCheckIfAlreadyExists(uniqueParameter,hibernateSession).list();

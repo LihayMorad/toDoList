@@ -9,7 +9,7 @@ import java.util.List;
 public class TestToDo {
 
     public static void main(String[] args) {
-        HibernateToDoListDAO hibernateToDoListDAO = HibernateToDoListDAO.getInstance();
+        TaskHibernateDAO hibernateToDoListDAO = TaskHibernateDAO.getInstance();
         try {
 //            printToDoList(2);
 
@@ -34,7 +34,7 @@ public class TestToDo {
     public static void printToDoList(int listID) {
         try {
 
-            List<DBObject> list = HibernateToDoListDAO.getInstance().getList(listID);
+            List<DBObject> list = TaskHibernateDAO.getInstance().getList(listID);
             System.out.println("There are " + list.size() + " item(s) in the list");
             Iterator iii = list.iterator();
             while (iii.hasNext()) System.out.println(iii.next());

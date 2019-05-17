@@ -1,6 +1,7 @@
 package com.hit.todo.controller;
 
-import com.hit.todo.model.HibernateToDoListDAO;
+
+import com.hit.todo.model.TaskHibernateDAO;
 import com.hit.todo.model.ToDoListException;
 import com.hit.todo.model.UtilityFunctions;
 
@@ -16,7 +17,7 @@ public class TaskController  implements  IController{
             int irrelevant=0000;
 
             try {
-                // HibernateToDoListDAO.getInstance().addTask(new Task(irrelevant,listID,request.getParameter("description"),
+                // TaskHibernateDAO.getInstance().addTask(new Task(irrelevant,listID,request.getParameter("description"),
                 //                                            request.getParameter("status"))); How do we get listID ?
                 response.setStatus(200);
             }catch (IllegalArgumentException  error){ // Add ToDoListException to the catch clause
@@ -30,7 +31,7 @@ public class TaskController  implements  IController{
 
         /*try{
             UtilityFunctions.OnlyLettersNumbersAndSpaces(descriptionInput);
-            //HibernateToDoListDAO.getInstance().deleteTask(descriptionInput);
+            //TaskHibernateDAO.getInstance().deleteTask(descriptionInput);
             response.setStatus(200);
          }catch(IllegalArgumentException | ToDoListException error){
         }*/
@@ -40,7 +41,7 @@ public class TaskController  implements  IController{
         public void getList(HttpServletRequest request, HttpServletResponse response) throws  ToDoListException{
             try {
                 String listIDInput = request.getParameter("listID");
-                HibernateToDoListDAO.getInstance().getList(UtilityFunctions.IntegerParser(listIDInput));
+                TaskHibernateDAO.getInstance().getList(UtilityFunctions.IntegerParser(listIDInput));
                 response.setStatus(200);
             }catch (ToDoListException error ){
                 throw  new ToDoListException(error.getMessage(),error);

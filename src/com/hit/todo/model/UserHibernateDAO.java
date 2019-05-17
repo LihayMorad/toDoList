@@ -3,7 +3,21 @@ package com.hit.todo.model;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-public class UserDAO extends APIToDoListDAO {
+public class UserHibernateDAO extends APIToDoListDAO {
+
+    private static UserHibernateDAO uniqueInstance;
+
+    private UserHibernateDAO (){
+        super();
+    }
+
+    public static UserHibernateDAO  getInstance(){
+        if (uniqueInstance == null)
+            uniqueInstance = new UserHibernateDAO();
+        return uniqueInstance;
+    }
+
+
 
     @Override
     protected Query QueryToCheckIfAlreadyExists(String uniqueParameter, Session hibernateSession){
@@ -14,7 +28,7 @@ public class UserDAO extends APIToDoListDAO {
 
     @Override
     protected Query  QueryToFetchTheList(int listID,Session hibernateSession){
-        return HibernateToDoListDAO.getInstance().QueryToFetchTheList(listID,hibernateSession);
+        return TaskHibernateDAO.getInstance().QueryToFetchTheList(listID,hibernateSession);
     }
 
 
