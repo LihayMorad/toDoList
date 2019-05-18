@@ -1,4 +1,4 @@
-package com.hit.todo.controller;
+package il.ac.hit.todolist.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;

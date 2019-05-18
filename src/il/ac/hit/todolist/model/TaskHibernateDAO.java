@@ -1,4 +1,4 @@
-package com.hit.todo.model;
+package il.ac.hit.todolist.model;
 
 import org.hibernate.*;
 

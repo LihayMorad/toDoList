@@ -1,6 +1,6 @@
-package com.hit.todo.controller;
+package il.ac.hit.todolist.controller;
 
-import com.hit.todo.model.ToDoListException;
+import il.ac.hit.todolist.model.ToDoListException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

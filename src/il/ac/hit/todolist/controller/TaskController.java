@@ -1,11 +1,10 @@
-package com.hit.todo.controller;
+package il.ac.hit.todolist.controller;
 
 
-import com.hit.todo.model.TaskHibernateDAO;
-import com.hit.todo.model.ToDoListException;
-import com.hit.todo.model.UtilityFunctions;
+import il.ac.hit.todolist.model.TaskHibernateDAO;
+import il.ac.hit.todolist.model.ToDoListException;
+import il.ac.hit.todolist.model.UtilityFunctions;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
