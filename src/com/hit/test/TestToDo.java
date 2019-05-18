@@ -1,5 +1,6 @@
 package com.hit.test;
 
+import com.hit.todo.controller.Router;
 import com.hit.todo.model.*;
 
 
@@ -15,13 +16,19 @@ public class TestToDo {
 //            printToDoList(2);
 
             int irrelevant = 0; // id is irrelevant because of auto increment ID
+            //Router router=new Router();
+
+
+
+
+
             Task t1 = new Task(irrelevant, 1, "text1", false);
             Task t2= new Task(irrelevant,1,"text22",false);
-            User u1= new User ("alex","1111",3);
-            //hibernateToDoListDAO.deleteItem(t1.getListID());
-            dao.addItem(u1);
-            hibernateToDoListDAO.addItem(t1);
-            hibernateToDoListDAO.addItem(t2);
+            User u1= new User ("lihay","33333",3);
+            hibernateToDoListDAO.deleteItem(3);
+            //dao.addItem(u1);
+            //hibernateToDoListDAO.addItem(t1);
+            //hibernateToDoListDAO.addItem(t2);
             List<DBObject> list = TaskHibernateDAO.getInstance().getList(1);
             System.out.println(list.size());
 

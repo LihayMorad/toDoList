@@ -24,8 +24,8 @@ public abstract class APIToDoListDAO implements IToDoListDAO{
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
-            hibernateSession.beginTransaction();
-           if (!ifItemIsInDB(item.getUniqueParameter(), hibernateSession)) { // there isn't a task with the same description OR DBObject is an instance of User
+
+            if (!ifItemIsInDB(item.getUniqueParameter(), hibernateSession)) { // there isn't a task with the same description OR DBObject is an instance of User
                 hibernateSession.beginTransaction();
                 hibernateSession.save(item);
                 hibernateSession.getTransaction().commit();
@@ -113,7 +113,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO{
 
     private boolean ifItemIsInDB(String uniqueParameter, Session hibernateSession) {
         boolean exists = false;
-
+        hibernateSession.beginTransaction();
         List<DBObject> items = QueryToCheckIfAlreadyExists(uniqueParameter,hibernateSession).list();
             hibernateSession.getTransaction().commit();
             if (items.size() > 0) { // There is already a task with that description

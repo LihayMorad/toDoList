@@ -1,6 +1,7 @@
 package com.hit.todo.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.*;
 
 import javax.servlet.ServletException;
@@ -15,66 +16,62 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/router/*")
 public class Router extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    
-	  private String controller;
-	  private String action;
-	
-	
-	public Router() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	
-	private String formatControlerName() {
-		StringBuilder controllerClassName = new StringBuilder(50);
-		controllerClassName.append(controller.substring(0,1).toUpperCase()).
-                            append(controller.substring(1)).append("Controller");
-	    
-		return controllerClassName.toString();
+	private static String packageName = "com.hit.todo.controller";
+
+	// Constructor
+	public Router() {
+		super();
 	}
-	
-	
-	
-	
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	}
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		loadControllerAndAction(request);
-		String controllerClassName=formatControlerName();
+
+		PrintWriter out = response.getWriter();
+
+		String splittedURL[] = request.getPathInfo().split("/");
+		String controller = splittedURL[1];
+		String action = splittedURL[2];
+		System.out.println("Controller: " + controller);
+		System.out.println("Action: " + action);
+
+		String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
+		//composing the controller class name
 		try {
-			Class type=Class.forName(controllerClassName);
-			Object controllerInstance=type.newInstance();
-			Method requestedAction=type.getMethod(action,HttpServletRequest.class,HttpServletResponse.class);
-			requestedAction.invoke(controllerInstance, request,response);
-			getServletContext().getRequestDispatcher("/"+action+"jsp");
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException error) {
+			Class type = Class.forName(packageName + "." + controllerClassName);
+			Object controllerInstance = type.newInstance();
+			Method requestedAction = type.getMethod(action, HttpServletRequest.class, HttpServletResponse.class);
+			requestedAction.invoke(controllerInstance, request, response);
+			getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
+
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+				SecurityException | IllegalArgumentException | InvocationTargetException e) {
 			//throw new toDoListException(error.getMessage(),error);
+			e.printStackTrace();
+			//sending the user to error message screen
 		}
+
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		//out.println("<br/>getRequestURI():"+request.getRequestURI());
+		//out.println("<br/>getRequestURL():"+request.getRequestURL().toString());
+		//out.println("<br/>getServletPath():"+request.getServletPath());
+		//out.println("<br/>getQueryString():"+request.getQueryString());
+		//out.println("<br/>getPathInfo():"+request.getPathInfo());
+
 	}
-	
-	
-	private void loadControllerAndAction(HttpServletRequest request) {
-		String [] pathInfo= request.getPathInfo().split("/");
-		controller=pathInfo[1];
-		action=pathInfo[2];
-   }
-	
-	
-	
-	
+
+
+
+
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+
 
 }

@@ -16,13 +16,13 @@ public class TaskController  implements  IController{
         public void addItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
             int irrelevant=0000;
 
-            try {
+           /* try {
                 // TaskHibernateDAO.getInstance().addTask(new Task(irrelevant,listID,request.getParameter("description"),
                 //                                            request.getParameter("status"))); How do we get listID ?
                 response.setStatus(200);
             }catch (IllegalArgumentException  error){ // Add ToDoListException to the catch clause
                 throw new ToDoListException(error.getMessage(),error);
-            }
+            }*/
         }
 
         @Override

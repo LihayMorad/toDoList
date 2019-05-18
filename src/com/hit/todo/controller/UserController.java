@@ -1,6 +1,7 @@
 package com.hit.todo.controller;
 
 import com.hit.todo.model.ToDoListException;
+import com.hit.todo.model.UserHibernateDAO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +10,15 @@ public class UserController implements  IController{
 
     @Override
     public void addItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
+
+      /*try {
+
+
+          //UserHibernateDAO.getInstance().addItem();
+
+      }catch (ToDoListException error){
+
+      }*/
 
     }
 
