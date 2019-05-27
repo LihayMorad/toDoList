@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Router extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static String packageName = "com.hit.todo.controller";
+	private static String packageName = "il.ac.hit.todolist.controller";
 
 	// Constructor
 	public Router() {

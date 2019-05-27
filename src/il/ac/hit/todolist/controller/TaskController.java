@@ -8,11 +8,11 @@ import il.ac.hit.todolist.model.UtilityFunctions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TaskController  implements  IController{
+public class TaskController  {
 
 
-        @Override
-        public void addItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
+
+        public void addtask(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
             int irrelevant=0000;
 
            /* try {
@@ -24,8 +24,8 @@ public class TaskController  implements  IController{
             }*/
         }
 
-        @Override
-        public void deleteItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException  {
+
+        public void deletetask(HttpServletRequest request, HttpServletResponse response) throws ToDoListException  {
             String descriptionInput=request.getParameter("description");
 
         /*try{
@@ -36,8 +36,8 @@ public class TaskController  implements  IController{
         }*/
         }
 
-        @Override
-        public void getList(HttpServletRequest request, HttpServletResponse response) throws  ToDoListException{
+
+        public void gettasklist(HttpServletRequest request, HttpServletResponse response) throws  ToDoListException{
             try {
                 String listIDInput = request.getParameter("listID");
                 TaskHibernateDAO.getInstance().getList(UtilityFunctions.IntegerParser(listIDInput));
@@ -47,10 +47,12 @@ public class TaskController  implements  IController{
             }
         }
 
-        @Override
-        public void updateItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
+
+        public void updatetaskstatus(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
 
         }
+
+
 }
 
 

@@ -5,15 +5,16 @@ import il.ac.hit.todolist.model.ToDoListException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class UserController implements  IController{
+public class UserController {
 
-    @Override
-    public void addItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
+
+    public void adduser(HttpServletRequest request, HttpServletResponse response) throws ToDoListException {
 
       /*try {
 
 
-          //UserHibernateDAO.getInstance().addItem();
+          //UserHibernateDAO.getInstance().addItem(new User(request.getParameter("listID"),request.getParameter("username"),
+          //                                       request.getParameter("password")));
 
       }catch (ToDoListException error){
 
@@ -21,18 +22,6 @@ public class UserController implements  IController{
 
     }
 
-    @Override
-    public void deleteItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException{
 
-    }
 
-    @Override
-    public void updateItem(HttpServletRequest request, HttpServletResponse response) throws ToDoListException{
-
-    }
-
-    @Override
-    public void getList(HttpServletRequest request, HttpServletResponse response)throws ToDoListException {
-
-    }
 }

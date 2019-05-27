@@ -55,7 +55,7 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
     }
 
     @Override
-    protected Query QueryToCheckIfAlreadyExists(String uniqueParameter,Session hibernateSession){
+    protected Query queryToCheckIfAlreadyExists(String uniqueParameter, Session hibernateSession){
         Query query =hibernateSession.createQuery("FROM Task WHERE description=:uniqueParameter");
         query.setParameter("uniqueParameter", uniqueParameter);
         return query;
@@ -63,14 +63,14 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
 
 
     @Override
-    protected Query  QueryToFetchTheList(int listID,Session hibernateSession){
+    protected Query queryToFetchTheList(int listID, Session hibernateSession){
          Query query=hibernateSession.createQuery("FROM Task WHERE listID=:listID");
          query.setParameter("listID", listID);
         return query;
     }
 
     @Override
-    protected DBObject RetrieveSingleItem(Serializable uniqueParameter,Session hibernateSession){
+    protected DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession){
         Task task = (Task) hibernateSession.get(Task.class, uniqueParameter);
         return  task;
     }
