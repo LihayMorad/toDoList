@@ -44,6 +44,7 @@ public class Router extends HttpServlet {
 		try {
 			Class type = Class.forName(packageName + "." + controllerClassName);
 			Object controllerInstance = type.newInstance();
+			//Object controllerInstance = type.newInstance(request,response);
 			Method requestedAction = type.getMethod(action, HttpServletRequest.class, HttpServletResponse.class);
 			requestedAction.invoke(controllerInstance, request, response);
 			getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);

@@ -62,5 +62,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="jars_this_code_sample_uses" level="project" />
+    <orderEntry type="library" name="gson-2.8.5" level="project" />
   </component>
 </module>

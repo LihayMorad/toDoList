@@ -1,5 +1,7 @@
 package il.ac.hit.todolist.model;
 
+import java.io.Serializable;
+
 public class Task extends DBObject {
 
     //Missing deadline parameter
@@ -9,24 +11,19 @@ public class Task extends DBObject {
     private int listID;
     private String description;
     private boolean status;
+    private String deadline;
 
     // Class constructors
     public Task() {
     } // default Constructor
 
-    public Task(int taskID, int listID, String description, boolean status) { // constructor
+    public Task(int taskID, int listID, String description, boolean status, String deadline) { // constructor
         this.setTaskID(taskID);
         this.setListID(listID);
         this.setDescription(description);
         this.setStatus(status);
+        this.setDeadline(deadline);
     }
-
-//    public Task(int taskID, int listID, String description, String status) {
-//        setTaskID(taskID);
-//        setListID(listID);
-//        setDescription(description);
-//        setDescription(status);
-//    }
 
     // Class methods
     public int getTaskID() {
@@ -67,6 +64,14 @@ public class Task extends DBObject {
 //        this.status=UtilityFunctions.BooleanValidator(status);
     }
 
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -74,12 +79,13 @@ public class Task extends DBObject {
                 ", listID=" + listID +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", deadline=" + deadline +
                 '}';
     }
 
     @Override
-    public String getUniqueParameter(){
-        return  getDescription();
+    public Serializable getUniqueParameter() {
+        return getTaskID();
     }
 
 }

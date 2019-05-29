@@ -19,8 +19,6 @@ public class UserHibernateDAO extends APIToDoListDAO {
         return uniqueInstance;
     }
 
-
-
     @Override
     protected Query queryToCheckIfAlreadyExists(String uniqueParameter, Session hibernateSession){
         Query query =hibernateSession.createQuery("FROM User WHERE username=:uniqueParameter");
@@ -33,9 +31,8 @@ public class UserHibernateDAO extends APIToDoListDAO {
         return TaskHibernateDAO.getInstance().queryToFetchTheList(listID,hibernateSession);
     }
 
-
     @Override
-    protected DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) {
+    public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) {
         User lamer = (User) hibernateSession.get(User.class, uniqueParameter);
         return  lamer;
     }

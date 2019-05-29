@@ -19,6 +19,12 @@ public class User extends DBObject  {
         this.setListID(listID);
     }
 
+    public User(String username, String password, String listID) {
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setListID(UtilityFunctions.integerParser(listID));
+    }
+
     public String getUsername() {
         return username;
     }
@@ -26,6 +32,7 @@ public class User extends DBObject  {
     //public List<DBObject> getTaskLog() { return taskLog; }
 
     public void setUsername(String username) {
+        //UtilityFunctions.onlyLettersAndNumbers(username);
         this.username = username;
     }
 
@@ -34,8 +41,10 @@ public class User extends DBObject  {
     }
 
     public void setPassword(String password) {
+        //UtilityFunctions.passwordValidation(password);
         this.password = password;
     }
+
 
     public int getListID() {
         return listID;
