@@ -1,8 +1,12 @@
 package il.ac.hit.todolist.controller;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,9 +28,17 @@ public class Router extends HttpServlet {
 		super();
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		Map<String, Boolean> redirect = new HashMap<>();
+		redirect.put("redirect", true);
+		String json = new Gson().toJson(redirect);
+		response.setStatus(200);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(json);
+
+//        doGet(request, response); // TEMPORARY
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,7 +59,7 @@ public class Router extends HttpServlet {
 			//Object controllerInstance = type.newInstance(request,response);
 			Method requestedAction = type.getMethod(action, HttpServletRequest.class, HttpServletResponse.class);
 			requestedAction.invoke(controllerInstance, request, response);
-			getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
+//            getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
 
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
 				SecurityException | IllegalArgumentException | InvocationTargetException e) {
@@ -62,17 +74,9 @@ public class Router extends HttpServlet {
 		//out.println("<br/>getServletPath():"+request.getServletPath());
 		//out.println("<br/>getQueryString():"+request.getQueryString());
 		//out.println("<br/>getPathInfo():"+request.getPathInfo());
-
 	}
-
-
-
-
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-
-
 }
