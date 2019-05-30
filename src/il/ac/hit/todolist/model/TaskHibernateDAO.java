@@ -53,12 +53,7 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
         }
     }
 
-    @Override
-    protected Query queryToCheckIfAlreadyExists(String uniqueParameter, Session hibernateSession) {
-        Query query = hibernateSession.createQuery("FROM Task WHERE description=:uniqueParameter");
-        query.setParameter("uniqueParameter", uniqueParameter);
-        return query;
-    }
+
 
 
     @Override

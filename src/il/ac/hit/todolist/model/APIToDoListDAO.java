@@ -14,9 +14,12 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
 
     private SessionFactory factory = null;
 
-
     protected APIToDoListDAO() { // Constructor
         this.factory = new AnnotationConfiguration().configure().buildSessionFactory();
+    }
+
+    public SessionFactory getFactory() {
+        return factory;
     }
 
     @Override
@@ -25,12 +28,12 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
-            if (!ifItemIsInDB(item.getUniqueParameter(), hibernateSession)) {
+            if (!isItemAlreadyExists(item.getUniqueParameter(), hibernateSession)) {
                 hibernateSession.beginTransaction();
                 hibernateSession.save(item);
                 hibernateSession.getTransaction().commit();
                 success = true;
-            } // else there is already a task with the same description
+            } // else there is already an item we the same unique parameter
             return success;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
@@ -82,10 +85,6 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
-    public SessionFactory getFactory() {
-        return factory;
-    }
-
     @Override
     public final List<DBObject> getList(int listID) throws ToDoListException {
         Session hibernateSession = null;
@@ -112,20 +111,22 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
-    public boolean ifItemIsInDB(Serializable uniqueParameter, Session hibernateSession) {
+    public boolean isItemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
         return retrieveSingleItem(uniqueParameter, hibernateSession) != null;
     }
 
 
-    abstract protected Query queryToCheckIfAlreadyExists(String uniqueParameter, Session hibernateSession);
+    //While adding new subclasses of APIToDoListDAO the programmer has to decide whether the class supports
+    //get list service. If yes, he will override this method, otherwise exception will be thrown.
+    protected Query queryToFetchTheList(int listID, Session hibernateSession) { // overrided in TaskHibernateDAO
+        throw new IllegalArgumentException("Get list is currently not supported! Override this method if necessary");
+    }
 
-    abstract protected Query queryToFetchTheList(int listID, Session hibernateSession);
-
-    abstract public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession);
+    public abstract DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession);
 
     public final DBObject requestForSingleItem(Serializable uniqueParameter) throws ToDoListException {
-        Session hibernateSession = null;
 
+        Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
             return retrieveSingleItem(uniqueParameter, hibernateSession);
