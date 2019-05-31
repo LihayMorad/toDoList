@@ -110,7 +110,14 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
     }
 
     public boolean itemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
-        return retrieveSingleItem(uniqueParameter, hibernateSession) != null;
+        boolean exists=true;
+       try {
+           retrieveSingleItem(uniqueParameter, hibernateSession);
+       }catch (HibernateException error){
+          exists=false;
+       }
+
+       return exists;
     }
 
 
