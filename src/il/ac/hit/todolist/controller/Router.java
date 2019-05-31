@@ -1,10 +1,18 @@
 package il.ac.hit.todolist.controller;
 
 import com.google.gson.Gson;
+import il.ac.hit.todolist.model.ToDoListException;
+import il.ac.hit.todolist.model.User;
+import il.ac.hit.todolist.model.UserHibernateDAO;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.*;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,13 +37,14 @@ public class Router extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
+        System.out.println("[doPost]");
 
         doGet(request, response); // TEMPORARY
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("[doGet]");
 
         PrintWriter out = response.getWriter();
 
@@ -53,6 +62,7 @@ public class Router extends HttpServlet {
             Object controllerInstance = constructor.newInstance(request,response);
             Method requestedAction = type.getMethod(action);
             requestedAction.invoke(controllerInstance);
+//            response.sendRedirect("http://localhost:8080/toDoList_war_exploded/addtask.jsp");
 //            getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
 
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |

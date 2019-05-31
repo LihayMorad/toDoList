@@ -14,7 +14,8 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
 
     private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
 
-    protected APIToDoListDAO() { } // Constructor
+    protected APIToDoListDAO() {
+    } // Constructor
 
     protected SessionFactory getFactory() {
         return factory;
@@ -110,14 +111,13 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
     }
 
     public boolean itemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
-        boolean exists=true;
-       try {
-           retrieveSingleItem(uniqueParameter, hibernateSession);
-       }catch (HibernateException error){
-          exists=false;
-       }
-
-       return exists;
+        boolean exists = false;
+        try {
+            exists = retrieveSingleItem(uniqueParameter, hibernateSession) != null;
+        } catch (HibernateException error) {
+            exists = false;
+        }
+        return exists;
     }
 
 
