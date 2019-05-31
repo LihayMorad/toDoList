@@ -12,13 +12,11 @@ import java.util.List;
 //Abstract class,including generic implementation of addition- ,deletion- and retrieve list methods
 public abstract class APIToDoListDAO implements IToDoListDAO {
 
-    private SessionFactory factory = null;
+    private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
 
-    protected APIToDoListDAO() { // Constructor
-        this.factory = new AnnotationConfiguration().configure().buildSessionFactory();
-    }
+    protected APIToDoListDAO() { } // Constructor
 
-    public SessionFactory getFactory() {
+    protected SessionFactory getFactory() {
         return factory;
     }
 
@@ -28,7 +26,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
-            if (!isItemAlreadyExists(item.getUniqueParameter(), hibernateSession)) {
+            if (!itemAlreadyExists(item.getUniqueParameter(), hibernateSession)) {
                 hibernateSession.beginTransaction();
                 hibernateSession.save(item);
                 hibernateSession.getTransaction().commit();
@@ -111,7 +109,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
-    public boolean isItemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
+    public boolean itemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
         return retrieveSingleItem(uniqueParameter, hibernateSession) != null;
     }
 
@@ -119,7 +117,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
     //While adding new subclasses of APIToDoListDAO the programmer has to decide whether the class supports
     //get list service. If yes, he will override this method, otherwise exception will be thrown.
     protected Query queryToFetchTheList(int listID, Session hibernateSession) { // overrided in TaskHibernateDAO
-        throw new IllegalArgumentException("Get list is currently not supported! Override this method if necessary");
+        throw new IllegalArgumentException("Get list is not supported!");
     }
 
     public abstract DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession);

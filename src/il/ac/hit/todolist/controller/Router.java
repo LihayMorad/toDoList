@@ -19,64 +19,55 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/router/*")
 public class Router extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
-	private static String packageName = "il.ac.hit.todolist.controller";
+    //    private static final long serialVersionUID = 1L;
+    private static String packageName = "il.ac.hit.todolist.controller";
 
-	// Constructor
-	public Router() {
-		super();
-	}
+    // Constructor
+    public Router() {
+        super();
+    }
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		Map<String, Boolean> redirect = new HashMap<>();
-		redirect.put("redirect", true);
-		String json = new Gson().toJson(redirect);
-		response.setStatus(200);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
 
-//        doGet(request, response); // TEMPORARY
-	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response); // TEMPORARY
+    }
 
-		PrintWriter out = response.getWriter();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String splittedURL[] = request.getPathInfo().split("/");
-		String controller = splittedURL[1];
-		String action = splittedURL[2];
-		System.out.println("Controller: " + controller);
-		System.out.println("Action: " + action);
+        PrintWriter out = response.getWriter();
 
-		String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
-		//composing the controller class name
-		try {
-			Class type = Class.forName(packageName + "." + controllerClassName);
-			Object controllerInstance = type.newInstance();
-			//Object controllerInstance = type.newInstance(request,response);
-			Method requestedAction = type.getMethod(action, HttpServletRequest.class, HttpServletResponse.class);
-			requestedAction.invoke(controllerInstance, request, response);
+        String splittedURL[] = request.getPathInfo().split("/");
+        String controller = splittedURL[1];
+        String action = splittedURL[2];
+        System.out.println("Controller: " + controller);
+        System.out.println("Action: " + action);
+
+        String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
+        //composing the controller class name
+        try {
+            Class type = Class.forName(packageName + "." + controllerClassName);
+            Constructor constructor = type.getConstructor(HttpServletRequest.class, HttpServletResponse.class);
+            Object controllerInstance = constructor.newInstance(request,response);
+            Method requestedAction = type.getMethod(action);
+            requestedAction.invoke(controllerInstance);
 //            getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
 
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
-				SecurityException | IllegalArgumentException | InvocationTargetException e) {
-			//throw new toDoListException(error.getMessage(),error);
-			e.printStackTrace();
-			//sending the user to error message screen
-		}
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+                SecurityException | IllegalArgumentException | InvocationTargetException e) {
+            //throw new toDoListException(error.getMessage(),error);
+            e.printStackTrace();
+            //sending the user to error message screen
+        }
 
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		//out.println("<br/>getRequestURI():"+request.getRequestURI());
-		//out.println("<br/>getRequestURL():"+request.getRequestURL().toString());
-		//out.println("<br/>getServletPath():"+request.getServletPath());
-		//out.println("<br/>getQueryString():"+request.getQueryString());
-		//out.println("<br/>getPathInfo():"+request.getPathInfo());
-	}
+        //response.getWriter().append("Served at: ").append(request.getContextPath());
+        //out.println("<br/>getRequestURI():"+request.getRequestURI());
+        //out.println("<br/>getRequestURL():"+request.getRequestURL().toString());
+        //out.println("<br/>getServletPath():"+request.getServletPath());
+        //out.println("<br/>getQueryString():"+request.getQueryString());
+        //out.println("<br/>getPathInfo():"+request.getPathInfo());
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 }

@@ -13,9 +13,10 @@ public abstract class Controller {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    protected  Controller () {};
+    protected Controller() {
+    }
 
-    protected Controller(HttpServletRequest request,HttpServletResponse response){
+    protected Controller(HttpServletRequest request, HttpServletResponse response) {
         setRequest(request);
         setResponse(response);
         setRequestBody();
@@ -33,20 +34,20 @@ public abstract class Controller {
         return response;
     }
 
-    private void setRequestBody() {
-        try {
-            this.requestBody = new Gson().fromJson(this.request.getReader(), JsonObject.class);
-        }catch (IOException error){
-            request.setAttribute("message", error.getMessage());
-        }
-    }
-
     private void setRequest(HttpServletRequest request) {
         this.request = request;
     }
 
     private void setResponse(HttpServletResponse response) {
         this.response = response;
+    }
+
+    private void setRequestBody() {
+        try {
+            this.requestBody = new Gson().fromJson(this.request.getReader(), JsonObject.class);
+        } catch (IOException error) {
+            request.setAttribute("message", error.getMessage());
+        }
     }
 
 }

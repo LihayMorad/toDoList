@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserController extends Controller {
 //No need in request and response as method parameters , since they are class members
@@ -18,30 +20,33 @@ public class UserController extends Controller {
         super(request, response);
     }
 
-    public void register(HttpServletRequest request, HttpServletResponse response) {
+    public void register() {
 
         try {
             //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
             //Check if user exists
+            HttpServletResponse response = this.getResponse();
+            Map<String, String> responseBody = new HashMap<>();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
 
-            if (UserHibernateDAO.getInstance().addItem(new User( // item was added successfully
+            if (UserHibernateDAO.getInstance().addItem(new User(
                     getRequestBody().get("username").getAsString(),
                     getRequestBody().get("password").getAsString(),
-                    getRequestBody().get("listID").getAsString()))) {
+                    66))) { // user was added successfully
 
-
-                String redirect = new Gson().toJson("redirect : true");
+                responseBody.put("redirect", "true");
                 response.setStatus(200);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write(redirect);
-
-            } else { // there is already an item with the same unique parameter
-//                response
+            } else { // there is already a username with the same with
+                responseBody.put("error", "Username already exists");
+                response.setStatus(409);
             }
+            String body = new Gson().toJson(responseBody);
+            response.getWriter().write(body);
+
         } catch (ToDoListException | IllegalArgumentException | IOException error) {
-            request.setAttribute("message", error.getMessage());
-            request.getRequestDispatcher("/toDoList_war_exploded/register.jsp");
+            this.getRequest().setAttribute("message", error.getMessage());
+            this.getRequest().getRequestDispatcher("/toDoList_war_exploded/register.jsp");
         }
 
     }

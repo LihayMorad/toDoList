@@ -8,18 +8,15 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
 
     private static TaskHibernateDAO uniqueInstance = null;
 
-
     private TaskHibernateDAO() { // Constructor
         super();
     }
-
 
     public static TaskHibernateDAO getInstance() {
         if (uniqueInstance == null)
             uniqueInstance = new TaskHibernateDAO();
         return uniqueInstance;
     }
-
 
     public boolean updateStatus(int itemID, boolean newStatus) throws ToDoListException {
         boolean success = false;
@@ -52,9 +49,6 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
             }
         }
     }
-
-
-
 
     @Override
     protected Query queryToFetchTheList(int listID, Session hibernateSession) {
