@@ -1,9 +1,7 @@
 package il.ac.hit.todolist.controller;
 
 import com.google.gson.Gson;
-import il.ac.hit.todolist.model.ToDoListException;
-import il.ac.hit.todolist.model.User;
-import il.ac.hit.todolist.model.UserHibernateDAO;
+import il.ac.hit.todolist.model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,6 +12,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/router/*")
 public class Router extends HttpServlet {
 
-    //    private static final long serialVersionUID = 1L;
     private static String packageName = "il.ac.hit.todolist.controller";
 
     // Constructor
@@ -36,48 +35,61 @@ public class Router extends HttpServlet {
         super();
     }
 
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("~~~[doOptions]~~~");
+        response.addHeader("Access-Control-Allow-Methods", "*");
+        response.addHeader("Access-Control-Allow-Origin", "*");
+
+//        doGet(request, response);
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("~~~[doDelete]~~~");
+
+        doGet(request, response);
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("[doPost]");
+        System.out.println("~~~[doPost]~~~");
 
-        doGet(request, response); // TEMPORARY
+//        System.out.println(response.getContentType());
+//        response.sendRedirect(request.getContextPath() + "/index.jsp");
 
+        doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("[doGet]");
-
-        PrintWriter out = response.getWriter();
+        System.out.println("~~~[doGet]~~~");
 
         String splittedURL[] = request.getPathInfo().split("/");
-        String controller = splittedURL[1];
-        String action = splittedURL[2];
-        System.out.println("Controller: " + controller);
-        System.out.println("Action: " + action);
+        if (splittedURL.length < 3) {
+            response.setStatus(404);
+        } else {
 
-        String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
-        //composing the controller class name
-        try {
-            Class type = Class.forName(packageName + "." + controllerClassName);
-            Constructor constructor = type.getConstructor(HttpServletRequest.class, HttpServletResponse.class);
-            Object controllerInstance = constructor.newInstance(request,response);
-            Method requestedAction = type.getMethod(action);
-            requestedAction.invoke(controllerInstance);
-//            response.sendRedirect("http://localhost:8080/toDoList_war_exploded/addtask.jsp");
+            String controller = splittedURL[1];
+            String action = splittedURL[2];
+            System.out.println("Controller: " + controller);
+            System.out.println("Action: " + action);
+
+            String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
+            //composing the controller class name
+            try {
+                Class type = Class.forName(packageName + "." + controllerClassName);
+                Constructor constructor = type.getConstructor(HttpServletRequest.class, HttpServletResponse.class);
+                Object controllerInstance = constructor.newInstance(request, response);
+                Method requestedAction = type.getMethod(action);
+                requestedAction.invoke(controllerInstance);
 //            getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
 
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
-                SecurityException | IllegalArgumentException | InvocationTargetException e) {
-            //throw new toDoListException(error.getMessage(),error);
-            e.printStackTrace();
-            //sending the user to error message screen
-        }
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+                    SecurityException | IllegalArgumentException | InvocationTargetException e) {
+                //throw new toDoListException(error.getMessage(),error);
+                e.printStackTrace();
 
-        //response.getWriter().append("Served at: ").append(request.getContextPath());
-        //out.println("<br/>getRequestURI():"+request.getRequestURI());
-        //out.println("<br/>getRequestURL():"+request.getRequestURL().toString());
-        //out.println("<br/>getServletPath():"+request.getServletPath());
-        //out.println("<br/>getQueryString():"+request.getQueryString());
-        //out.println("<br/>getPathInfo():"+request.getPathInfo());
+                //sending the user to error message screen
+                response.sendError(404, "Something went wrong");
+            }
+        }
     }
 
 }

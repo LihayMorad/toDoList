@@ -1,7 +1,7 @@
 package il.ac.hit.todolist.model;
 
 
-public class User extends DBObject  {
+public class User extends DBObject {
 
     private String username;
     private String password;
@@ -10,7 +10,7 @@ public class User extends DBObject  {
    /* @Transient
     private List<DBObject> taskLog;*/
 
-    public User() {
+    public User() { // default constructor
     }
 
     public User(String username, String password, int listID) {
@@ -45,7 +45,6 @@ public class User extends DBObject  {
         this.password = password;
     }
 
-
     public int getListID() {
         return listID;
     }
@@ -55,8 +54,17 @@ public class User extends DBObject  {
     }
 
     @Override
-    public String getUniqueParameter(){
+    public String getUniqueParameter() {
         return getUsername();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", listID=" + listID +
+                '}';
     }
 
 }

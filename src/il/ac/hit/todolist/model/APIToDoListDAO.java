@@ -14,10 +14,10 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
 
     private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
 
-    protected APIToDoListDAO() {
-    } // Constructor
+    protected APIToDoListDAO() { // Constructor
+    }
 
-    protected SessionFactory getFactory() {
+    public SessionFactory getFactory() {
         return factory;
     }
 
@@ -27,7 +27,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         Session hibernateSession = null;
         try {
             hibernateSession = this.factory.openSession();
-            if (!itemAlreadyExists(item.getUniqueParameter(), hibernateSession)) {
+            if (!isItemAlreadyExists(item.getUniqueParameter(), hibernateSession)) {
                 hibernateSession.beginTransaction();
                 hibernateSession.save(item);
                 hibernateSession.getTransaction().commit();
@@ -60,10 +60,12 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         try {
             hibernateSession = this.factory.openSession();
             hibernateSession.beginTransaction();
-            hibernateSession.delete(retrieveSingleItem(uniqueParameter, hibernateSession));
-            hibernateSession.getTransaction().commit();
-            success = true;
-
+            DBObject itemToDelete = retrieveSingleItem(uniqueParameter, hibernateSession);
+            if (itemToDelete != null) {
+                hibernateSession.delete(itemToDelete);
+                hibernateSession.getTransaction().commit();
+                success = true;
+            }
             return success;
         } catch (HibernateException e) {
             if (hibernateSession.getTransaction() != null)
@@ -98,7 +100,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
                 try {
                     hibernateSession.getTransaction().rollback();
                 } catch (HibernateException ex) {
-                    throw new ToDoListException(ex.getMessage(), ex);
+                    throw new ToDoListException(e.getMessage() + ", " + ex.getMessage(), ex);
                 }
             throw new ToDoListException(e.getMessage(), e);
         } finally {
@@ -110,7 +112,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
-    public boolean itemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
+    public boolean isItemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
         boolean exists = false;
         try {
             exists = retrieveSingleItem(uniqueParameter, hibernateSession) != null;
@@ -120,9 +122,6 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         return exists;
     }
 
-
-    //While adding new subclasses of APIToDoListDAO the programmer has to decide whether the class supports
-    //get list service. If yes, he will override this method, otherwise exception will be thrown.
     protected Query queryToFetchTheList(int listID, Session hibernateSession) { // overrided in TaskHibernateDAO
         throw new IllegalArgumentException("Get list is not supported!");
     }

@@ -1,5 +1,6 @@
 package il.ac.hit.todolist.model;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -20,7 +21,7 @@ public class UserHibernateDAO extends APIToDoListDAO {
     }
 
     @Override
-    public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) {
+    public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) throws HibernateException {
         User user = (User) hibernateSession.get(User.class, uniqueParameter);
         return user;
     }
