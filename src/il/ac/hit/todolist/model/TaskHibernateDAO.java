@@ -6,27 +6,32 @@ import java.io.Serializable;
 
 public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
 
-    private static TaskHibernateDAO uniqueInstance = null;
-
+    private static volatile TaskHibernateDAO uniqueInstance = null;
+    private static final Object lock= new Object ();
     private TaskHibernateDAO() { // Constructor
         super();
     }
 
     public static TaskHibernateDAO getInstance() {
-        if (uniqueInstance == null)
-            uniqueInstance = new TaskHibernateDAO();
+        if(uniqueInstance ==null) {
+            synchronized (lock) {
+                if (uniqueInstance == null)
+                    uniqueInstance = new TaskHibernateDAO();
+            }
+        }
         return uniqueInstance;
     }
 
-    public boolean updateStatus(int itemID, boolean newStatus) throws ToDoListException {
+    public boolean updateStatus(int itemID, int listID, boolean newStatus) throws ToDoListException {
         boolean success = false;
         Session hibernateSession = null;
         try {
-            hibernateSession = this.getFactory().openSession();
+            hibernateSession = getSessionManager().getFactory().openSession();
             hibernateSession.beginTransaction();
-            Query query = hibernateSession.createQuery("UPDATE Task SET status=:newStatus WHERE taskID=:taskID");
+            Query query = hibernateSession.createQuery("UPDATE Task SET status=:newStatus WHERE taskID=:taskID AND listID=:listID");
             query.setParameter("newStatus", newStatus);
             query.setParameter("taskID", itemID);
+            query.setParameter("listID", listID);
             int updatedCount = query.executeUpdate();
             hibernateSession.getTransaction().commit();
             success = updatedCount > 0;

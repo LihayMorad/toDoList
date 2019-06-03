@@ -8,15 +8,21 @@ import java.io.Serializable;
 
 public class UserHibernateDAO extends APIToDoListDAO {
 
-    private static UserHibernateDAO uniqueInstance;
+    private static volatile UserHibernateDAO uniqueInstance;
+    private static final Object lock= new Object ();
+
 
     private UserHibernateDAO() {
         super();
     }
 
     public static UserHibernateDAO getInstance() {
-        if (uniqueInstance == null)
-            uniqueInstance = new UserHibernateDAO();
+        if(uniqueInstance ==null) {
+            synchronized (lock) {
+                if (uniqueInstance == null)
+                    uniqueInstance = new UserHibernateDAO();
+            }
+        }
         return uniqueInstance;
     }
 

@@ -78,7 +78,7 @@ public class TestToDo {
             int irrelevant = 0;
             Task t1 = new Task(irrelevant, 55, "this is 55", false, "2020");
             TaskHibernateDAO.getInstance().addItem(t1);
-            TaskHibernateDAO.getInstance().updateStatus(t1.getTaskID(), true);
+            //TaskHibernateDAO.getInstance().updateStatus(t1.getTaskID(), true);
         } catch (ToDoListException e) {
             e.printStackTrace();
         }

@@ -12,13 +12,17 @@ import java.util.List;
 //Abstract class,including generic implementation of addition- ,deletion- and retrieve list methods
 public abstract class APIToDoListDAO implements IToDoListDAO {
 
-    private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
+    //private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
+    private ConnectionPool sessionManager;
+   //instead of factory
 
     protected APIToDoListDAO() { // Constructor
+       sessionManager=ConnectionPool.getInstance();
     }
 
-    public SessionFactory getFactory() {
-        return factory;
+
+    public ConnectionPool getSessionManager() {
+        return sessionManager;
     }
 
     @Override
@@ -26,7 +30,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         boolean success = false;
         Session hibernateSession = null;
         try {
-            hibernateSession = this.factory.openSession();
+            hibernateSession = sessionManager.getFactory().openSession();
             if (!isItemAlreadyExists(item.getUniqueParameter(), hibernateSession)) {
                 hibernateSession.beginTransaction();
                 hibernateSession.save(item);
@@ -34,22 +38,18 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
                 success = true;
             } // else there is already an item we the same unique parameter
             return success;
-        } catch (HibernateException e) {
+        } catch (HibernateException error) {
             if (hibernateSession.getTransaction() != null)
                 try {
                     hibernateSession.getTransaction().rollback();
-                } catch (HibernateException ex) {
-                    throw new ToDoListException(ex.getMessage(), ex);
+                } catch (HibernateException exception) {
+                    throw new ToDoListException(exception.getMessage(), exception);
                 }
-            throw new ToDoListException(e.getMessage(), e);
+            throw new ToDoListException(error.getMessage(), error);
         } finally {
             try {
-                if (hibernateSession != null) {
-                    hibernateSession.close();
-                }
-            } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e);
-            }
+                if (hibernateSession != null) { hibernateSession.close(); }
+            } catch (HibernateException e) {}
         }
     }
 
@@ -58,7 +58,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         boolean success = false;
         Session hibernateSession = null;
         try {
-            hibernateSession = this.factory.openSession();
+            hibernateSession = sessionManager.getFactory().openSession();
             hibernateSession.beginTransaction();
             DBObject itemToDelete = retrieveSingleItem(uniqueParameter, hibernateSession);
             if (itemToDelete != null) {
@@ -77,12 +77,8 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
             throw new ToDoListException(e.getMessage(), e);
         } finally {
             try {
-                if (hibernateSession != null) {
-                    hibernateSession.close();
-                }
-            } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e);
-            }
+                if (hibernateSession != null) { hibernateSession.close(); }
+            } catch (HibernateException e) { }
         }
     }
 
@@ -90,7 +86,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
     public final List<DBObject> getList(int listID) throws ToDoListException {
         Session hibernateSession = null;
         try {
-            hibernateSession = this.factory.openSession();
+            hibernateSession = sessionManager.getFactory().openSession();
             hibernateSession.beginTransaction();
             List<DBObject> tasks = queryToFetchTheList(listID, hibernateSession).list();
             hibernateSession.getTransaction().commit();
@@ -106,9 +102,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         } finally {
             try {
                 if (hibernateSession != null) hibernateSession.close();
-            } catch (HibernateException e) {
-                throw new ToDoListException(e.getMessage(), e);
-            }
+            } catch (HibernateException e) { }
         }
     }
 
@@ -132,7 +126,7 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
 
         Session hibernateSession = null;
         try {
-            hibernateSession = this.factory.openSession();
+            hibernateSession = sessionManager.getFactory().openSession();
             return retrieveSingleItem(uniqueParameter, hibernateSession);
         } catch (HibernateException error) {
             throw new ToDoListException(error.getMessage(), error);
