@@ -2,14 +2,14 @@
   Created by IntelliJ IDEA.
   User: Lihay
   Date: 03/06/2019
-  Time: 19:46
+  Time: 19:47
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
 
-    <title>Add Task</title>
+    <title>Title</title>
 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -18,21 +18,22 @@
 </head>
 <body>
 
-<div data-role="page" data-theme="b" id="additem">
+<div data-role="page" data-theme="b" id="updatetask">
 
     <div data-role="header">
-        <h1>Add your task</h1>
+        <h1>Edit your task</h1>
     </div>
 
     <div data-role="content">
 
-        <div date-role="form">
-            <label for="description">Enter a description for your new task:</label>
-            <input type="text" name="description" placeholder="Enter description" id="description">
-            <label for="deadline">Enter a deadline for your new task:</label>
-            <input type="datetime-local" name="deadline" id="deadline">
+        <% int taskID = Integer.valueOf(request.getParameter("taskID"));
+            System.out.println(taskID);%>
+
+        <form action="<%=request.getServletContext().getContextPath()%>/router/task/updateTaskStatus" method="post">
+            <input type="text" name="status" value="<%=request.getParameter("status")%>">
+            <input type="hidden" name="taskID" value="<%=taskID%>">
             <input type="submit" value="Save">
-        </div>
+        </form>
 
     </div>
 

@@ -2,6 +2,8 @@ package il.ac.hit.todolist.controller;
 
 import com.google.gson.Gson;
 import il.ac.hit.todolist.model.*;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,31 +26,32 @@ public class UserController extends Controller {
         return listIDGenerator.getAndIncrement();
     }
 
-    private void forwardToHomePage(User user){
-        responseBody.put("userListID", String.valueOf(user.getListID()));
-        responseBody.put("redirectTo", request.getContextPath() + "/index.jsp"); // SHOULD BE 'TO DO LIST' PAGE
-        response.setStatus(200);
+    private void forwardToHomePage(User user) throws ToDoListException {
+        try {
+            request.getRequestDispatcher("/router/task/getTasksList").forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new ToDoListException(e.getMessage(), e);
+        }
+//        request.setAttribute(("userListID", String.valueOf(user.getListID()));
+//        response.setStatus(200);
     }
 
-    private void setAlreadyLoggedInReport(User loggedInUser){
-        responseBody.put("message", "You are already logged in");
+    private void setAlreadyLoggedInReport(User loggedInUser) throws ToDoListException {
+//        responseBody.put("message", "You are already logged in");
         forwardToHomePage(loggedInUser);
     }
 
-    private  void setLoginSuccessReport(User signingIn){
+    private void setLoginSuccessReport(User signingIn) throws ToDoListException {
         getRequest().getSession().setAttribute("loggedInUser", signingIn);
-        responseBody.put("message", "You are now logged in.");
+//        responseBody.put("message", "You are now logged in.");
         forwardToHomePage(signingIn);
     }
 
-    private void setSignUpSuccessReport(User userToRegister){
+    private void setSignUpSuccessReport(User userToRegister) throws ToDoListException {
         getRequest().getSession().setAttribute("loggedInUser", userToRegister); // to indicate that user is logged in
-        responseBody.put("message", "Registration completed successfully and you are now logged in.");
+//        responseBody.put("message", "Registration completed successfully and you are now logged in.");
         forwardToHomePage(userToRegister);
     }
-
-
-
 
     public void login() throws ToDoListException {
 
@@ -64,66 +67,64 @@ public class UserController extends Controller {
 //            console.warn("error.responseJSON: ", error.responseJSON);
 //        }
 //        })
+
         try {
             User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
-            if (userIsAlreadyLoggedIn(loggedInUser))  // user is already logged in !!
-                setAlreadyLoggedInReport( loggedInUser);
-
-            else  // user is not logged in
+            if (userIsAlreadyLoggedIn(loggedInUser)) { // user is already logged in !!
+                setAlreadyLoggedInReport(loggedInUser);
+            } else { // user is not logged in
                 startLogin();
                 //// @@@@@@@@@@@@ maybe we should do the check in sql query (for security reasons)
                 //// @@@@@@@@@@@@ maybe we should do the check in sql query (for security reasons)
                 //// @@@@@@@@@@@@ maybe we should do the check in sql query (for security reasons)
-               //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
+                //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
+            }
         } catch (ToDoListException e) {
             //System.out.println(e.getMessage());
             //e.printStackTrace();
-            setErrorReport("Unknown error while login",503);
+//            setErrorReport("Unknown error while login", 503);
+            request.setAttribute("error", "Unknown error while login.");
         } finally {
             try {
-                String responseBodyJSON = new Gson().toJson(responseBody);
-                response.getWriter().write(responseBodyJSON);
-                response.getWriter().flush();
-                response.getWriter().close();//Duplicate code
-            } catch (IOException ex) {
+                if (request.getAttribute("error") != null)
+                    request.getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (IOException | ServletException ex) {
                 throw new ToDoListException(ex.getMessage(), ex);//send to error page or make error report
             }
         }
     }
 
-
-    private void startLogin() throws ToDoListException{
+    private void startLogin() throws ToDoListException {
         String usernameProvided = requestBody.get("username").getAsString();
         String passwordProvided = requestBody.get("password").getAsString();
         User loggingIn = (User) UserHibernateDAO.getInstance().requestForSingleItem(usernameProvided);
-
-        if(credentialsAreWrong(loggingIn,passwordProvided))
-            setErrorReport("Username and/or password are incorrect.",406);
-
-        else
+        if (credentialsAreWrong(loggingIn, passwordProvided)) {
+//            setErrorReport("Username and/or password are incorrect.", 406);
+            request.setAttribute("error", "Username and/or password are incorrect.");
+        } else {
             setLoginSuccessReport(loggingIn);
-
+        }
     }
 
-
-    private boolean credentialsAreWrong(User loggingIn,String providedPassword){
-        return  loggingIn==null || loggingIn.getPassword()!=providedPassword;
+    private boolean credentialsAreWrong(User loggingIn, String providedPassword) {
+        return loggingIn == null || !loggingIn.getPassword().equals(providedPassword);
     }
 
-
-    private void startSigningUp() throws ToDoListException{
+    private void startSigningUp() throws ToDoListException {
         int generatedListID = getNewListID();
+
+        //User potentialUser=new User(request.getAttribute("username"),request.getAttribute("password"),generatedListID);
 
         User potentialUser = new User(
                 getRequestBody().get("username").getAsString(),
                 getRequestBody().get("password").getAsString(),
                 generatedListID);
-        if (UserHibernateDAO.getInstance().addItem(potentialUser))  // user was added successfully
+        if (UserHibernateDAO.getInstance().addItem(potentialUser)) {// user was added successfully
             setSignUpSuccessReport(potentialUser);
-
-        else  // [ERROR] there is already a username with the same with
-            setErrorReport("Username already exists",409);
-
+        } else { // [ERROR]
+//            setErrorReport("Username already exists", 409);
+            request.setAttribute("error", "Username already exists");
+        }
     }
 
     public void register() throws ToDoListException {
@@ -145,24 +146,23 @@ public class UserController extends Controller {
             //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
 
             User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
-            if (userIsAlreadyLoggedIn(loggedInUser))  // user is already logged in !!
-                setAlreadyLoggedInReport( loggedInUser);
-
-            else  // user is not logged in
+            if (userIsAlreadyLoggedIn(loggedInUser)) { // user is already logged in !!
+                setAlreadyLoggedInReport(loggedInUser);
+            } else { // user is not logged in
                 startSigningUp();
-
+            }
         } catch (ToDoListException e) {
             //System.out.println(e.getMessage());
             //e.printStackTrace();
-            setErrorReport("Unknown error while signing up",503);
+//            setErrorReport("Unknown error while signing up", 503);
+            request.setAttribute("error", "Unknown error while signing up.");//Better to send the message of exception
         } finally {
             try {
-                String responseBodyString = new Gson().toJson(responseBody);
-                response.getWriter().write(responseBodyString);
-                response.getWriter().flush();
-                response.getWriter().close();//Duplicate code
-            } catch (IOException ex) {
+                if (request.getAttribute("error") != null)
+                    request.getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+            } catch (IOException | ServletException ex) {
                 throw new ToDoListException(ex.getMessage(), ex); //send to error page or make error report
+                //DON'T throw exception in finally!!!!!!
             }
         }
     }

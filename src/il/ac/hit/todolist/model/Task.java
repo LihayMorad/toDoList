@@ -51,17 +51,13 @@ public class Task extends DBObject {
         this.description = description;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-//        this.status=UtilityFunctions.BooleanValidator(status);
+        //        this.status=UtilityFunctions.BooleanValidator(status);
     }
 
     public String getDeadline() {

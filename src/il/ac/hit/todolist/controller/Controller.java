@@ -49,31 +49,30 @@ public abstract class Controller {
     }
 
     private void setRequestBody() {
-        try {
-            this.requestBody = new Gson().fromJson(this.request.getReader(), JsonObject.class);
-        } catch (IOException error) {
-            request.setAttribute("message", error.getMessage());
-        }
+//        try {
+//            this.requestBody = new Gson().fromJson(this.request.getReader(), JsonObject.class);
+//        } catch (IOException error) {
+//            request.setAttribute("message", error.getMessage());
+//        }
     }
 
-    protected boolean userIsAlreadyLoggedIn(User loggedInUser){
-        return loggedInUser !=null;
+    protected boolean userIsAlreadyLoggedIn(User loggedInUser) {
+        return loggedInUser != null;
     }
 
-    private void setResponseBody(){
-        responseBody= new HashMap<>();
+    private void setResponseBody() {
+        responseBody = new HashMap<>();
     }
 
-    private void setContentTypeAndEncoding(){
-        response.setContentType("application/json");
+    private void setContentTypeAndEncoding() {
+        response.setContentType("application/json"); //Must be changed since we don't use Json Object ("application/html" ?)
         response.setCharacterEncoding("UTF-8");
     }
 
-    protected void setErrorReport(String errorMessage,int errorCode){
+    protected void setErrorReport(String errorMessage, int errorCode) {
         responseBody.put("error", errorMessage);
         response.setStatus(errorCode);
     }
-
 
 
 }

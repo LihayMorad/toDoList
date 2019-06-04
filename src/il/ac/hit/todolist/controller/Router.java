@@ -43,6 +43,7 @@ public class Router extends HttpServlet {
 //        doGet(request, response);
     }
 
+
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("~~~[doDelete]~~~");
 
@@ -61,11 +62,17 @@ public class Router extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("~~~[doGet]~~~");
 
+        System.out.println("getPathInfo: " + request.getPathInfo());
+        System.out.println("getRequestURI: " + request.getRequestURI());
+
+        // @@@@@@@ temporary
+        request.getSession().setAttribute("loggedInUser", new User("lihay2", "pass1", 1));
+
         String splittedURL[] = request.getPathInfo().split("/");
         if (splittedURL.length < 3) {
-            response.setStatus(404);
-        } else {
+            response.sendError(404, "Not found message");
 
+        } else {
             String controller = splittedURL[1];
             String action = splittedURL[2];
             System.out.println("Controller: " + controller);

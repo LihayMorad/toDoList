@@ -14,10 +14,10 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
 
     //private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
     private ConnectionPool sessionManager;
-   //instead of factory
+    //instead of factory
 
     protected APIToDoListDAO() { // Constructor
-       sessionManager=ConnectionPool.getInstance();
+        sessionManager = ConnectionPool.getInstance();
     }
 
 
@@ -48,8 +48,11 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
             throw new ToDoListException(error.getMessage(), error);
         } finally {
             try {
-                if (hibernateSession != null) { hibernateSession.close(); }
-            } catch (HibernateException e) {}
+                if (hibernateSession != null) {
+                    hibernateSession.close();
+                }
+            } catch (HibernateException e) {
+            }
         }
     }
 
@@ -77,8 +80,11 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
             throw new ToDoListException(e.getMessage(), e);
         } finally {
             try {
-                if (hibernateSession != null) { hibernateSession.close(); }
-            } catch (HibernateException e) { }
+                if (hibernateSession != null) {
+                    hibernateSession.close();
+                }
+            } catch (HibernateException e) {
+            }
         }
     }
 
@@ -102,7 +108,8 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         } finally {
             try {
                 if (hibernateSession != null) hibernateSession.close();
-            } catch (HibernateException e) { }
+            } catch (HibernateException e) {
+            }
         }
     }
 
