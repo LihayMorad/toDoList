@@ -26,13 +26,13 @@
 
     <div data-role="content">
 
-        <div date-role="form">
+        <form method="post" action="<%=request.getServletContext().getContextPath()%>/router/task/addTask">
             <label for="description">Enter a description for your new task:</label>
-            <input type="text" name="description" placeholder="Enter description" id="description">
+            <input type="text" name="description" placeholder="Enter description" id="description" required>
             <label for="deadline">Enter a deadline for your new task:</label>
-            <input type="datetime-local" name="deadline" id="deadline">
+            <input type="datetime-local" name="deadline" id="deadline" required>
             <input type="submit" value="Save">
-        </div>
+        </form>
 
     </div>
 

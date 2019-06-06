@@ -1,5 +1,6 @@
 <%@ page import="il.ac.hit.todolist.model.Task" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.time.LocalDateTime" %><%--
   Created by IntelliJ IDEA.
   User: Lihay
   Date: 03/06/2019
@@ -29,7 +30,6 @@
 
     <%
         List<Task> tasks = (List<Task>) request.getAttribute("tasks");
-        System.out.println("tasks: " + tasks);
     %>
 
     <div data-role="header">
@@ -38,18 +38,24 @@
     </div>
 
     <div data-role="content">
-        <a href="<%=request.getServletContext().getContextPath()%>/addtask.jsp" data-role="button" data-rel="dialog"
+        <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=addtask"
+           data-role="button" data-rel="dialog"
            data-inline="true" data-icon="add">Add item</a>
         <br> <br>
         <% if (tasks != null) { %>
         <ul data-role="listview" data-filter="true" data-theme="c">
-            <% for (Task task : tasks) { %>
+            <%
+                for (Task task : tasks) {
+                    LocalDateTime deadline = LocalDateTime.parse(task.getDeadline());
+            %>
             <li>
-                <a href="<%=request.getServletContext().getContextPath()%>/updatetask.jsp?taskID=<%=task.getTaskID()%>&status=<%=task.getStatus()%>"
-                   data-rel="dialog" data-inline="true"><%=task.getDescription()%>
-                    <span style="float: right">(<%=task.getDeadline()%>)</span>
+                <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=updatetask&taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>&status=<%=task.getStatus()%>"<% if (task.getStatus()) { %>
+                   style="background-color: lightgray" <% } %> data-rel="dialog"
+                   data-inline="true"><%=task.getDescription()%>
+                    <span style="float: right">(<%=deadline.toLocalDate() + ", " + deadline.toLocalTime()%>)</span>
                 </a>
-                <a data-inline="true" data-icon="delete">delete</a>
+                <a href="<%=request.getServletContext().getContextPath()%>/router/task/deleteTask?taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>"
+                   data-inline="true" data-icon="delete">delete</a>
             </li>
             <% } %>
         </ul>

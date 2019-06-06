@@ -26,16 +26,14 @@
 
     <div data-role="content">
 
-        <div date-role="form">
+        <form method="post" action="${pageContext.request.contextPath}/router/user/login">
             <p>Please login to edit your to do list.</p>
             <input type="text" name="username" placeholder="Enter your username" id="loginUsername">
             <input type="password" name="password" placeholder="Enter your password" id="loginPassword">
             <input data-role="button" type="submit" value="Submit">
 
             <!-- <a data-role="button" data-inline="true">Forgot password?</a> -->
-            <input type="submit" data-inline="true" value="Forgot password?">
-
-        </div>
+        </form>
 
     </div>
 

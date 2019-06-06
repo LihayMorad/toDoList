@@ -7,19 +7,25 @@ import java.io.Serializable;
 public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
 
     private static volatile TaskHibernateDAO uniqueInstance = null;
-    private static final Object lock= new Object ();
-    private TaskHibernateDAO() { // Constructor
+    private static final Object lock = new Object();
+
+    private TaskHibernateDAO() {
         super();
-    }
+    } // Constructor
 
     public static TaskHibernateDAO getInstance() {
-        if(uniqueInstance ==null) {
+        if (uniqueInstance == null) {
             synchronized (lock) {
                 if (uniqueInstance == null)
                     uniqueInstance = new TaskHibernateDAO();
             }
         }
         return uniqueInstance;
+    }
+
+    @Override
+    protected String getTableName(){
+        return "Task";
     }
 
     public boolean updateStatus(int itemID, int listID, boolean newStatus) throws ToDoListException {

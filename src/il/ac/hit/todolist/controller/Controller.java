@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import il.ac.hit.todolist.model.User;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public abstract class Controller {
 //        }
     }
 
-    protected boolean userIsAlreadyLoggedIn(User loggedInUser) {
+    protected boolean userIsLoggedIn(User loggedInUser) {
         return loggedInUser != null;
     }
 
@@ -74,5 +75,10 @@ public abstract class Controller {
         response.setStatus(errorCode);
     }
 
-
+    protected  void redirectToErrorPage(){
+        try {
+            if (request.getAttribute("error") != null)
+                request.getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (IOException | ServletException ex) {}
+    }
 }

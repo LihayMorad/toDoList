@@ -38,16 +38,23 @@
         <p> Hi <%=loggedInUser.getUsername()%>
         </p>
         <% } else { %>
-        <a data -rel="dialog" href="<%=request.getServletContext().getContextPath()%>/router/user/login.jsp" data - theme="c"> Login </a>
-        <a data -rel="dialog" href="<%=request.getServletContext().getContextPath()%>/router/user/register.jsp" data - theme="c"> Register </a>
+        <a data-rel="dialog"
+           href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=login"
+           data-theme="c"> Login </a>
+        <a data-rel="dialog"
+           href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=register"
+           data-theme="c"> Register </a>
         <% } %>
 
     </div>
 
     <div data-role="content">
-        <a data-role="button" data-inline="true" href="<%=request.getServletContext().getContextPath()%>/router/task/getTasksList"
+        <a data-role="button" data-inline="true"
+           href="<%=request.getServletContext().getContextPath()%>/router/task/getTasksList"
            data-theme="b">My List</a>
     </div>
+
+    <button onclick="alert('JavaScript is working!')">JavaScript Test</button>
 
 </div>
 

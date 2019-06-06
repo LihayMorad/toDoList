@@ -1,7 +1,7 @@
 package il.ac.hit.todolist.model;
 
 import java.io.Serializable;
-
+import il.ac.hit.todolist.validation.*;
 public class Task extends DBObject {
 
     //Missing deadline parameter
@@ -65,6 +65,7 @@ public class Task extends DBObject {
     }
 
     public void setDeadline(String deadline) {
+        //UtilityFunctions.DateValidation(deadline);
         this.deadline = deadline;
     }
 

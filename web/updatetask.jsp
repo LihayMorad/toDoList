@@ -26,12 +26,22 @@
 
     <div data-role="content">
 
-        <% int taskID = Integer.valueOf(request.getParameter("taskID"));
-            System.out.println(taskID);%>
+        <%
+            int taskID = Integer.valueOf(request.getParameter("taskID"));
+            int listID = Integer.valueOf(request.getParameter("listID"));
+        %>
 
         <form action="<%=request.getServletContext().getContextPath()%>/router/task/updateTaskStatus" method="post">
-            <input type="text" name="status" value="<%=request.getParameter("status")%>">
+            <%--            <input type="text" name="status" value="<%=request.getParameter("status")%>">--%>
+            <div data-role="fieldcontain">
+                <label for="flipper">Task done:</label>
+                <select name="status" id="flipper" data-role="slider">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
             <input type="hidden" name="taskID" value="<%=taskID%>">
+            <input type="hidden" name="listID" value="<%=listID%>">
             <input type="submit" value="Save">
         </form>
 

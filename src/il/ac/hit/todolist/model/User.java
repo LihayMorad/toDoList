@@ -1,5 +1,6 @@
 package il.ac.hit.todolist.model;
 
+import il.ac.hit.todolist.validation.*;
 
 public class User extends DBObject {
 
