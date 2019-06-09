@@ -26,12 +26,14 @@
 
     <div data-role="content">
 
-        <div date-role="form">
-            <p>Please register to edit your to do list.</p>
+        <form method="post" action="${pageContext.request.contextPath}/router/user/register">
+            <p>Registration</p>
             <input type="text" name="username" placeholder="Enter your username" id="registerUsername">
             <input type="password" name="password" placeholder="Enter your password" id="registerPassword">
             <input data-role="button" type="submit" value="Submit">
-        </div>
+
+            <!-- <a data-role="button" data-inline="true">Forgot password?</a> -->
+        </form>
 
     </div>
 

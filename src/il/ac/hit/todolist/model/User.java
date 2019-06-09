@@ -8,9 +8,6 @@ public class User extends DBObject {
     private String password;
     private int listID;
 
-   /* @Transient
-    private List<DBObject> taskLog;*/
-
     public User() { // default constructor
     }
 
@@ -20,17 +17,9 @@ public class User extends DBObject {
         this.setListID(listID);
     }
 
-    public User(String username, String password, String listID) {
-        this.setUsername(username);
-        this.setPassword(password);
-        this.setListID(UtilityFunctions.integerParser(listID));
-    }
-
     public String getUsername() {
         return username;
     }
-
-    //public List<DBObject> getTaskLog() { return taskLog; }
 
     public void setUsername(String username) {
         //UtilityFunctions.onlyLettersAndNumbers(username);

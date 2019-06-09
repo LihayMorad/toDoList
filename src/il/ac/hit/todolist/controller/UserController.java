@@ -9,10 +9,8 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserController extends Controller {
-//No need in request and response as method parameters , since they are class members
 
     private static AtomicInteger listIDGenerator = new AtomicInteger();
-    //private User loggedInUser;
 
     public UserController() { // default constructor
     }
@@ -39,39 +37,32 @@ public class UserController extends Controller {
     }
 
     public void login() throws ToDoListException {
-
         try {
             User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
             if (userIsLoggedIn(loggedInUser)) { // user is already logged in !!
                 forwardToTasksList(loggedInUser);
             } else { // user is not logged in
                 initiateLogin();
-                //// @@@@@@@@@@@@ maybe we should do the check in sql query (for security reasons)
-                //// @@@@@@@@@@@@ maybe we should do the check in sql query (for security reasons)
-                //// @@@@@@@@@@@@ maybe we should do the check in sql query (for security reasons)
                 //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
             }
         } catch (ToDoListException e) {
-            //System.out.println(e.getMessage());
-            //e.printStackTrace();
             request.setAttribute("error", "Unknown error while login.");
         } finally {
-            redirectToErrorPage();
+            redirectToErrorPageIfNecessary();
         }
     }
 
     private void initiateLogin() throws ToDoListException {
-        String usernameProvided = request.getParameter("username");
-        String passwordProvided = request.getParameter("password");
-        if (usernameProvided != null && passwordProvided != null) {
+        String expectedParameters[] = {"username", "password"};
+        if (requiredParametersProvided(expectedParameters)) {
+            String usernameProvided = request.getParameter("username");
+            String passwordProvided = request.getParameter("password");
             User loggingIn = (User) UserHibernateDAO.getInstance().requestForSingleItem(usernameProvided);
             if (credentialsAreWrong(loggingIn, passwordProvided)) {
                 request.setAttribute("error", "Username and/or password are incorrect.");
             } else {
                 successfulLogin(loggingIn);
             }
-        } else { // [ERROR]
-            request.setAttribute("error", "Username or password not provided.");
         }
     }
 
@@ -81,18 +72,16 @@ public class UserController extends Controller {
 
     private void initiateSignUp() throws ToDoListException {
         int generatedListID = getNewListID();
-
-        //User potentialUser=new User(request.getAttribute("username"),request.getAttribute("password"),generatedListID);
-
-        User potentialUser = new User(
-                getRequestBody().get("username").getAsString(),
-                getRequestBody().get("password").getAsString(),
-                generatedListID);
-        if (UserHibernateDAO.getInstance().addItem(potentialUser)) {// user was added successfully
-            successfulLogin(potentialUser);
-        } else { // [ERROR]
-//            setErrorReport("Username already exists", 409);
-            request.setAttribute("error", "Username already exists");
+        String expectedParameters[] = {"username", "password"};
+        if (requiredParametersProvided(expectedParameters)) {
+            String usernameProvided = request.getParameter("username");
+            String passwordProvided = request.getParameter("password");
+            User potentialUser = new User(usernameProvided, passwordProvided, generatedListID);
+            if (UserHibernateDAO.getInstance().addItem(potentialUser)) {// user was added successfully
+                successfulLogin(potentialUser);
+            } else { // [ERROR]
+                request.setAttribute("error", "Username already exists");
+            }
         }
     }
 
@@ -108,12 +97,9 @@ public class UserController extends Controller {
                 initiateSignUp();
             }
         } catch (ToDoListException e) {
-            //System.out.println(e.getMessage());
-            //e.printStackTrace();
-//            setErrorReport("Unknown error while signing up", 503);
             request.setAttribute("error", "Unknown error while signing up.");//Better to send the message of exception
         } finally {
-            redirectToErrorPage();
+            redirectToErrorPageIfNecessary();
         }
     }
 

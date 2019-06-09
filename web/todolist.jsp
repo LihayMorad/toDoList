@@ -49,8 +49,8 @@
                     LocalDateTime deadline = LocalDateTime.parse(task.getDeadline());
             %>
             <li>
-                <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=updatetask&taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>&status=<%=task.getStatus()%>"<% if (task.getStatus()) { %>
-                   style="background-color: lightgray" <% } %> data-rel="dialog"
+                <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=updatetask&taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>&status=<%=task.getStatus()%>"
+                        <% if (task.getStatus()) { %> style="background-color: #afafaf" <% } %> data-rel="dialog"
                    data-inline="true"><%=task.getDescription()%>
                     <span style="float: right">(<%=deadline.toLocalDate() + ", " + deadline.toLocalTime()%>)</span>
                 </a>

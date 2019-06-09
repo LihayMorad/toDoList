@@ -1,26 +1,14 @@
 package il.ac.hit.todolist.controller;
 
-import com.google.gson.Gson;
-import il.ac.hit.todolist.model.*;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
-
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.*;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 /**
  * Servlet implementation class Router
@@ -29,30 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 public class Router extends HttpServlet {
 
     private static String packageName = "il.ac.hit.todolist.controller";
+//    private static final Logger LOGGER = Logger.getLogger(Router.class.getSimpleName());
 
     // Constructor
     public Router() {
         super();
     }
 
-    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("~~~[doOptions]~~~");
-        response.addHeader("Access-Control-Allow-Methods", "*");
-        response.addHeader("Access-Control-Allow-Origin", "*");
-
-//        doGet(request, response);
-    }
-
-
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("~~~[doDelete]~~~");
-
-        doGet(request, response);
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("~~~[doPost]~~~");
-
 //        System.out.println(response.getContentType());
 //        response.sendRedirect(request.getContextPath() + "/index.jsp");
 
@@ -62,11 +35,7 @@ public class Router extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("~~~[doGet]~~~");
 
-        System.out.println("getPathInfo: " + request.getPathInfo());
-        System.out.println("getRequestURI: " + request.getRequestURI());
-
-        // @@@@@@@ temporary
-        request.getSession().setAttribute("loggedInUser", new User("lihay2", "pass1", 1));
+//        LOGGER.info("@@@@@@@@@@@@@doPost"); // IN PROGRESS
 
         String splittedURL[] = request.getPathInfo().split("/");
         if (splittedURL.length < 3) {
@@ -94,7 +63,8 @@ public class Router extends HttpServlet {
                 e.printStackTrace();
 
                 //sending the user to error message screen
-                response.sendError(404, "Something went wrong");
+                request.setAttribute("error", "Something went wrong");
+                request.getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
             }
         }
     }

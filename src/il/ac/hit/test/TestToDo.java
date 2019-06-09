@@ -15,12 +15,12 @@ public class TestToDo {
         /* Task tests */
 //        addTaskTest();
         updateTaskDetailTest();
-        updateUserDetailTest();
 //        deleteTaskTest();
         //printToDoList(55);
 
         /* User tests */
 //        addUserTest();
+        //        updateUserDetailTest();
 //        deleteUserTest();
 
         System.out.println("=== TESTS DONE === " + new Date().getTime());
@@ -80,25 +80,25 @@ public class TestToDo {
             Task t1 = new Task(irrelevant, 55, "this is 55", false, "2020-02-04");
             //TaskHibernateDAO.getInstance().addItem(t1);
             System.out.println("primary key is busy test starts------\nUpdateSucessful:");
-            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("taskID",2,"taskID",4));
+            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("taskID", 2, "taskID", 6));
             System.out.println("UPDATE TASK STATUS - TEST STARTED--------\nUpdateSucessful:");
-            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("status",true,"taskID",2));
+            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("status", true, "taskID", 2));
             System.out.println("UPDATE TASK DESCRIPTION - TEST STARTED--------\nUpdateSucessful:");
-            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("description","Buy oranges","taskID",3));
+            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("description", "Buy oranges", "taskID", 2));
             System.out.println("UPDATE TASK DEADLINE - TEST STARTED--------\nUpdateSucessful:");
-            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("deadline","2014-02-05","taskID",4));
+            System.out.println(TaskHibernateDAO.getInstance().updateColumnValue("deadline", "2014-02-05", "taskID", 2));
         } catch (ToDoListException e) {
             e.printStackTrace();
         }
     }
 
-    public static void updateUserDetailTest(){
+    public static void updateUserDetailTest() {
         try {
 
             System.out.println("Username is busy test starts------\nUpdateSuccessful:");
-            System.out.println(UserHibernateDAO.getInstance().updateColumnValue("username","lihay14","username","lihay12"));
+            System.out.println(UserHibernateDAO.getInstance().updateColumnValue("username", "lihay14", "username", "lihay12"));
             System.out.println("Username is not busy - TEST STARTED--------\nUpdateSuccessful:");
-            System.out.println(UserHibernateDAO.getInstance().updateColumnValue("username","vova","username","pavel"));
+            System.out.println(UserHibernateDAO.getInstance().updateColumnValue("username", "vova", "username", "pavel"));
 
         } catch (ToDoListException e) {
             e.printStackTrace();
