@@ -2,6 +2,7 @@ package il.ac.hit.todolist.model;
 
 import il.ac.hit.todolist.validation.*;
 
+//Hibernate class defining an appropriate table in DB ( in this case users table)
 public class User extends DBObject {
 
     private String username;
@@ -17,6 +18,7 @@ public class User extends DBObject {
         this.setListID(listID);
     }
 
+    // getters and setters
     public String getUsername() {
         return username;
     }
@@ -49,7 +51,7 @@ public class User extends DBObject {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // The returned string is a line from Users table
         return "User{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +

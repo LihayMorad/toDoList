@@ -16,6 +16,8 @@ public class UserHibernateDAO extends APIToDoListDAO {
         super();
     }
 
+
+    //Static method to get an instance of singleton
     public static UserHibernateDAO getInstance() {
         if (uniqueInstance == null) {
             synchronized (lock) {
@@ -31,6 +33,9 @@ public class UserHibernateDAO extends APIToDoListDAO {
         return "User";
     }
 
+
+
+    // Method for user authentication
     public boolean validateUser(User loggingIn, String providedPassword) throws ToDoListException {
         boolean isValid = false;
         Session hibernateSession = null;
@@ -64,7 +69,7 @@ public class UserHibernateDAO extends APIToDoListDAO {
         }
     }
 
-    @Override
+    @Override   //Get User instance
     public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) throws HibernateException {
         User user = (User) hibernateSession.get(User.class, uniqueParameter);
         return user;

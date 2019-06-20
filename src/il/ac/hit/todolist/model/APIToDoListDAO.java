@@ -7,12 +7,13 @@ import org.hibernate.Session;
 import java.io.Serializable;
 import java.util.List;
 
-//Abstract class,including generic implementation of addition- ,deletion-, update field- and retrieve list methods
+//Abstract class, defining polymorphic family of singletons where each one in turn contains a singleton member ( an instance of ConnectionPool)
+//Includes implementation of addition- ,deletion-, update field- and retrieve list methods.
 public abstract class APIToDoListDAO implements IToDoListDAO {
 
-    //private static SessionFactory factory = new AnnotationConfiguration().configure().buildSessionFactory();
+
     private ConnectionPool sessionManager;
-    //instead of factory
+
 
     protected APIToDoListDAO() { // Constructor
         sessionManager = ConnectionPool.getInstance();
@@ -111,6 +112,9 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
+
+    //The method is checking whether requested item exists in DB by calling retrieveSingleItem method.
+    //Created in order to improve code readability .
     public boolean itemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
         boolean exists = false;
         try {
@@ -121,14 +125,19 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         return exists;
     }
 
-    protected Query queryToFetchTheList(int listID, Session hibernateSession) { // overrided in TaskHibernateDAO
+    protected Query queryToFetchTheList(int listID, Session hibernateSession) { // can be overridden in subclasses if necessary
         throw new IllegalArgumentException("Get list is not supported!");
     }
 
+    //Generic method for getting a single object from DB. Abstract declaration enables to postpone its implementation
+    //and thus not to change the code of the methods where it's used.
     public abstract DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession);
 
     protected abstract String getTableName();
 
+
+    //Wrapper for more convenient way to call retrieveSingleItem from the outside
+    //(no need to open the session in client code).
     public final DBObject requestForSingleItem(Serializable uniqueParameter) throws ToDoListException {
 
         Session hibernateSession = null;
@@ -146,7 +155,9 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
-    //Generic method that enables to update either object attribute you want. Obviously it might be overridden in subclasses, if necessary
+    //Unlike the rest of IToDoListDAO methods this method CAN be overridden in subclasses ( for instance all the attributes of Task can be updated
+    //while for password in User it's better to write separate method resetPassword
+    @Override
     public boolean updateColumnValue(String columnName, Serializable newValue, String primaryKey, Serializable keyValue) throws ToDoListException {
 
         boolean success = false;

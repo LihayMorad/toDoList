@@ -13,6 +13,7 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
         super();
     } // Constructor
 
+    //Static method to get an instance of singleton
     public static TaskHibernateDAO getInstance() {
         if (uniqueInstance == null) {
             synchronized (lock) {
@@ -36,7 +37,7 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
     }
 
     @Override
-    public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) {
+    public DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession) { //Get Task instance
         Task task = (Task) hibernateSession.get(Task.class, uniqueParameter);
         return task;
     }

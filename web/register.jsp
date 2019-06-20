@@ -11,9 +11,9 @@
 
     <title>Register</title>
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
 
 </head>
 <body>
@@ -25,6 +25,11 @@
     </div>
 
     <div data-role="content">
+        <% String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+        %>
+        <p class="errorMessage"><%=errorMessage%></p>
+        <% } %>
 
         <form method="post" action="${pageContext.request.contextPath}/router/user/register">
             <p>Registration</p>

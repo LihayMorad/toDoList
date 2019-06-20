@@ -25,15 +25,13 @@ public class Router extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("~~~[doPost]~~~");
-//        System.out.println(response.getContentType());
-//        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        //System.out.println("~~~[doPost]~~~");
 
         doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("~~~[doGet]~~~");
+        //System.out.println("~~~[doGet]~~~");
 
 //        LOGGER.info("@@@@@@@@@@@@@doPost"); // IN PROGRESS
 
@@ -44,8 +42,8 @@ public class Router extends HttpServlet {
         } else {
             String controller = splittedURL[1];
             String action = splittedURL[2];
-            System.out.println("Controller: " + controller);
-            System.out.println("Action: " + action);
+            //System.out.println("Controller: " + controller);
+            //System.out.println("Action: " + action);
 
             String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
             //composing the controller class name
@@ -59,7 +57,6 @@ public class Router extends HttpServlet {
 
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
                     SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                //throw new toDoListException(error.getMessage(),error);
                 e.printStackTrace();
 
                 //sending the user to error message screen

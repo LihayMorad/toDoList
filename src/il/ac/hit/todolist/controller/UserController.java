@@ -1,5 +1,6 @@
 package il.ac.hit.todolist.controller;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import il.ac.hit.todolist.model.*;
 
 import javax.servlet.ServletException;
@@ -7,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
-
+//Unit ,responsible for user registration and login.
 public class UserController extends Controller {
 
     private static AtomicInteger listIDGenerator = new AtomicInteger();
@@ -23,54 +24,62 @@ public class UserController extends Controller {
         return listIDGenerator.getAndIncrement();
     }
 
-    private void forwardToTasksList(User user) throws ToDoListException {
-        try {
-            request.getRequestDispatcher("/router/task/getTasksList").forward(request, response);
-        } catch (ServletException | IOException e) {
-            throw new ToDoListException(e.getMessage(), e);
-        }
+    private boolean credentialsAreWrong(User loggingIn, String providedPassword) throws ToDoListException {
+        return loggingIn == null || !UserHibernateDAO.getInstance().validateUser(loggingIn, providedPassword);
     }
 
     private void successfulLogin(User loggedInUser) throws ToDoListException {
         getRequest().getSession().setAttribute("loggedInUser", loggedInUser);
-        forwardToTasksList(loggedInUser);
+        forwardToTasksList();
     }
 
+    //This method is invoked while  request for login is received
     public void login() throws ToDoListException {
         try {
             User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
             if (userIsLoggedIn(loggedInUser)) { // user is already logged in !!
-                forwardToTasksList(loggedInUser);
+                forwardToTasksList();
             } else { // user is not logged in
                 initiateLogin();
-                //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
             }
-        } catch (ToDoListException e) {
+        } catch (ToDoListException | ServletException | IOException e) {
             request.setAttribute("error", "Unknown error while login.");
         } finally {
             redirectToErrorPageIfNecessary();
         }
     }
 
-    private void initiateLogin() throws ToDoListException {
+    private void initiateLogin() throws ToDoListException, ServletException, IOException {
         String expectedParameters[] = {"username", "password"};
         if (requiredParametersProvided(expectedParameters)) {
             String usernameProvided = request.getParameter("username");
             String passwordProvided = request.getParameter("password");
             User loggingIn = (User) UserHibernateDAO.getInstance().requestForSingleItem(usernameProvided);
             if (credentialsAreWrong(loggingIn, passwordProvided)) {
-                request.setAttribute("error", "Username and/or password are incorrect.");
+                request.setAttribute("errorMessage", "Username and/or password are incorrect.");
+                request.getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
             } else {
                 successfulLogin(loggingIn);
             }
         }
     }
-
-    private boolean credentialsAreWrong(User loggingIn, String providedPassword) throws ToDoListException {
-        return loggingIn == null || !UserHibernateDAO.getInstance().validateUser(loggingIn, providedPassword);
+    //This method is invoked while  request for registration is received
+    public void register() throws ToDoListException {
+        try {
+            User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
+            if (userIsLoggedIn(loggedInUser)) { // user is already logged in !!
+                successfulLogin(loggedInUser);
+            } else { // user is not logged in
+                initiateSignUp();
+            }
+        } catch (ToDoListException | ServletException | IOException e) {
+            request.setAttribute("error", "Unknown error while signing up.");
+        } finally {
+            redirectToErrorPageIfNecessary();
+        }
     }
 
-    private void initiateSignUp() throws ToDoListException {
+    private void initiateSignUp() throws ToDoListException, ServletException, IOException {
         int generatedListID = getNewListID();
         String expectedParameters[] = {"username", "password"};
         if (requiredParametersProvided(expectedParameters)) {
@@ -80,32 +89,10 @@ public class UserController extends Controller {
             if (UserHibernateDAO.getInstance().addItem(potentialUser)) {// user was added successfully
                 successfulLogin(potentialUser);
             } else { // [ERROR]
-                request.setAttribute("error", "Username already exists");
+                request.setAttribute("errorMessage", "Username already exists");
+                request.getServletContext().getRequestDispatcher("/register.jsp").forward(request, response);
             }
         }
-    }
-
-    public void register() throws ToDoListException {
-
-        try {
-            //passwordsMatch(data.get("password").getAsString(),data.get("retype").getAsString());
-
-            User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
-            if (userIsLoggedIn(loggedInUser)) { // user is already logged in !!
-                successfulLogin(loggedInUser);
-            } else { // user is not logged in
-                initiateSignUp();
-            }
-        } catch (ToDoListException e) {
-            request.setAttribute("error", "Unknown error while signing up.");//Better to send the message of exception
-        } finally {
-            redirectToErrorPageIfNecessary();
-        }
-    }
-
-    private void passwordsMatch(String password, String retype) {
-        if (!password.equals(retype))
-            throw new IllegalArgumentException("Passwords mismatch");
     }
 
 }

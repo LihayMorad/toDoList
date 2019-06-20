@@ -9,6 +9,7 @@ public abstract class DBObject {
     public DBObject() {
     }
 
+    //Declaration of method for getting primary key
     public abstract Serializable getUniqueParameter();
 
 }

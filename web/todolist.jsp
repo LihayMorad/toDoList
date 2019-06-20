@@ -13,24 +13,17 @@
 
     <title>My To Do List</title>
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-
-    <style>
-        body {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="Styles/styles.css"/>
+    <link rel="stylesheet" href="//code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
 
 </head>
 <body>
 
 <div data-role="page" data-theme="b" id="todolist">
-
-    <%
-        List<Task> tasks = (List<Task>) request.getAttribute("tasks");
-    %>
 
     <div data-role="header">
         <h1>My To Do List</h1>
@@ -40,25 +33,37 @@
     <div data-role="content">
         <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=addtask"
            data-role="button" data-rel="dialog"
-           data-inline="true" data-icon="add">Add item</a>
+           data-inline="true" data-icon="add" class="btn btn-secondary">Add item</a>
         <br> <br>
-        <% if (tasks != null) { %>
-        <ul data-role="listview" data-filter="true" data-theme="c">
+
+        <%
+            String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+        %>
+        <p class="errorMessage"><%=errorMessage%>
+        </p>
+        <% } %>
+
+        <%
+            List<Task> tasks = (List<Task>) request.getSession().getAttribute("tasks");
+            if (tasks != null) {
+        %>
+        <ol data-role="listview" data-filter="true">
             <%
                 for (Task task : tasks) {
                     LocalDateTime deadline = LocalDateTime.parse(task.getDeadline());
             %>
-            <li>
+            <li <% String theme = task.getStatus() ? "c" : "b"; %> data-theme="<%=theme%>">
                 <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=updatetask&taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>&status=<%=task.getStatus()%>"
-                        <% if (task.getStatus()) { %> style="background-color: #afafaf" <% } %> data-rel="dialog"
-                   data-inline="true"><%=task.getDescription()%>
-                    <span style="float: right">(<%=deadline.toLocalDate() + ", " + deadline.toLocalTime()%>)</span>
+                   data-rel="dialog" data-inline="true">
+                    <%=task.getDescription()%>
+                    <span class="deadline float-right">(<%=deadline.toLocalDate() + ", " + deadline.toLocalTime()%>)</span>
                 </a>
                 <a href="<%=request.getServletContext().getContextPath()%>/router/task/deleteTask?taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>"
                    data-inline="true" data-icon="delete">delete</a>
             </li>
             <% } %>
-        </ul>
+        </ol>
 
         <% } else { %>
         <p>You list is empty.</p>

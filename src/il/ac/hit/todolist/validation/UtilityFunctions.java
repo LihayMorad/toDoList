@@ -2,13 +2,13 @@ package il.ac.hit.todolist.validation;
 
 
 
-
+//This class is a set of input validators
 public class UtilityFunctions {
 
 
     //Method for task description validation
     public static void OnlyLettersNumbersAndSpaces(String inputString) throws IllegalArgumentException {
-        if (!inputString.matches("^[A-Za-z0-9-, ]{3,50}$"))
+        if (!inputString.matches("^[A-Za-z0-9-, ]{3,100}$"))
             throw new IllegalArgumentException("Error : the expression might contain letters,numbers,commas and dashes only\nMinimal length - 3\n");
     }
 
@@ -29,7 +29,7 @@ public class UtilityFunctions {
     }
 
     public static int integerParser(String inputString) throws NumberFormatException {
-        inputString = inputString.trim();
+        inputString = inputString.trim(); //omits spaces
 
         int parsedString = Integer.MIN_VALUE;
 
