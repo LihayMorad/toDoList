@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-//This class defines common actions and members for all the controllers
+/**
+ * This class defines common actions and members for all the controllers
+ */
 public abstract class Controller {
 
     protected HttpServletRequest request;
@@ -18,6 +20,11 @@ public abstract class Controller {
     protected Controller() { // default constructor
     }
 
+    /**
+     * Controller constructor
+     * @param	request	  current request
+     * @param	response  current response
+     */
     protected Controller(HttpServletRequest request, HttpServletResponse response) {
         setRequest(request);
         setResponse(response);
@@ -39,10 +46,20 @@ public abstract class Controller {
         this.response = response;
     }
 
+    /**
+     * checks whether user is logged in or not
+     * @param	loggedInUser
+     * @return  true if user is logged in, else false
+     */
     protected boolean userIsLoggedIn(User loggedInUser) {
         return loggedInUser != null;
     }
 
+    /**
+     * checks whether required parameters provided or not
+     * @param	expectedParameters
+     * @return  true if required parameters provided, else false
+     */
     protected boolean requiredParametersProvided(String[] expectedParameters) {
         boolean provided = true;
         Map<String, String[]> parametersMap = request.getParameterMap();
@@ -59,6 +76,9 @@ public abstract class Controller {
         return provided;
     }
 
+    /**
+     * forward user to tasks list page
+     */
     protected void forwardToTasksList() throws ToDoListException {
         try {
             request.getRequestDispatcher("/router/task/getTasksList").forward(request, response);
@@ -67,6 +87,9 @@ public abstract class Controller {
         }
     }
 
+    /**
+     * forward user to error page if necessary
+     */
     protected void redirectToErrorPageIfNecessary() {
         try {
             if (request.getAttribute("error") != null)

@@ -1,6 +1,5 @@
 package il.ac.hit.todolist.controller;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import il.ac.hit.todolist.model.*;
 
 import javax.servlet.ServletException;
@@ -8,32 +7,54 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
-//Unit ,responsible for user registration and login.
+
+/**
+ * Class, responsible for user registration and login.
+ */
 public class UserController extends Controller {
 
+    /**
+     * this parameter is used for generating ID for each new list
+     */
     private static AtomicInteger listIDGenerator = new AtomicInteger();
 
     public UserController() { // default constructor
     }
 
+    // Constructor
     public UserController(HttpServletRequest request, HttpServletResponse response) {
         super(request, response);
     }
 
+    /**
+     * @return  an integer, id for a new list
+     */
     public static int getNewListID() {
         return listIDGenerator.getAndIncrement();
     }
 
+    /**
+     * check whether user owns the list or not
+     * @param	loggingIn
+     * @param	providedPassword
+     * @return  true if the credentials are wrong, else return false
+     */
     private boolean credentialsAreWrong(User loggingIn, String providedPassword) throws ToDoListException {
         return loggingIn == null || !UserHibernateDAO.getInstance().validateUser(loggingIn, providedPassword);
     }
 
+    /**
+     * forward user to tasks list page after a successful login
+     * @param	loggedInUser
+     */
     private void successfulLogin(User loggedInUser) throws ToDoListException {
         getRequest().getSession().setAttribute("loggedInUser", loggedInUser);
         forwardToTasksList();
     }
 
-    //This method is invoked while  request for login is received
+    /**
+     * This method is invoked while  request for login is received
+     */
     public void login() throws ToDoListException {
         try {
             User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
@@ -49,6 +70,10 @@ public class UserController extends Controller {
         }
     }
 
+    /**
+     * this function is used by "login" function
+     * initiate login
+     */
     private void initiateLogin() throws ToDoListException, ServletException, IOException {
         String expectedParameters[] = {"username", "password"};
         if (requiredParametersProvided(expectedParameters)) {
@@ -63,7 +88,10 @@ public class UserController extends Controller {
             }
         }
     }
-    //This method is invoked while  request for registration is received
+
+    /**
+     * This method is invoked while  request for registration is received
+     */
     public void register() throws ToDoListException {
         try {
             User loggedInUser = (User) request.getSession().getAttribute("loggedInUser");
@@ -79,6 +107,10 @@ public class UserController extends Controller {
         }
     }
 
+    /**
+     * this function is used by "register" function
+     * initiate register
+     */
     private void initiateSignUp() throws ToDoListException, ServletException, IOException {
         int generatedListID = getNewListID();
         String expectedParameters[] = {"username", "password"};

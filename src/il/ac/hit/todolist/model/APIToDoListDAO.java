@@ -7,23 +7,28 @@ import org.hibernate.Session;
 import java.io.Serializable;
 import java.util.List;
 
-//Abstract class, defining polymorphic family of singletons where each one in turn contains a singleton member ( an instance of ConnectionPool)
-//Includes implementation of addition- ,deletion-, update field- and retrieve list methods.
+/**
+ * Abstract class, defining polymorphic family of singletons
+ * where each one in turn contains a singleton member ( an instance of ConnectionPool)
+ * Includes implementation of addition- ,deletion-, update field- and retrieve list methods.
+ */
 public abstract class APIToDoListDAO implements IToDoListDAO {
 
-
     private ConnectionPool sessionManager;
-
 
     protected APIToDoListDAO() { // Constructor
         sessionManager = ConnectionPool.getInstance();
     }
 
-
     public ConnectionPool getSessionManager() {
         return sessionManager;
     }
 
+    /**
+     * adds an item to the database
+     * @param	item  Task or User object
+     * @return  true if the item addition was successful, else return false
+     */
     @Override
     public final boolean addItem(DBObject item) throws ToDoListException {
         boolean success = false;
@@ -55,6 +60,11 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
+    /**
+     * deletes an item from the database
+     * @param	uniqueParameter  Task or User object
+     * @return  true if the item deletion was successful, else return false
+     */
     @Override
     public final boolean deleteItem(Serializable uniqueParameter) throws ToDoListException {
         boolean success = false;
@@ -87,6 +97,12 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
+    /**
+     * gets a list by provided ID from the database
+     * list type depends on the class which called this function
+     * @param	listID  list's ID
+     * @return  returns list of items
+     */
     @Override
     public final List<DBObject> getList(int listID) throws ToDoListException {
         Session hibernateSession = null;
@@ -113,8 +129,13 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
     }
 
 
-    //The method is checking whether requested item exists in DB by calling retrieveSingleItem method.
-    //Created in order to improve code readability .
+    /**
+     * checks whether requested item exists in Database by calling "retrieveSingleItem" method.
+     * Created in order to improve code readability.
+     * @param	uniqueParameter   primary key to check if exists
+     * @param   hibernateSession
+     * @return  returns true when there is already an item with provided key, else returns false
+     */
     public boolean itemAlreadyExists(Serializable uniqueParameter, Session hibernateSession) {
         boolean exists = false;
         try {
@@ -129,15 +150,23 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         throw new IllegalArgumentException("Get list is not supported!");
     }
 
-    //Generic method for getting a single object from DB. Abstract declaration enables to postpone its implementation
-    //and thus not to change the code of the methods where it's used.
+    /**
+     * Generic method for getting a single object from DB.
+     * Abstract declaration enables to postpone its implementation
+     * and thus not to change the code of the methods where it's used.
+     * @return  an item with the provided primary key
+     */
     public abstract DBObject retrieveSingleItem(Serializable uniqueParameter, Session hibernateSession);
 
     protected abstract String getTableName();
 
-
-    //Wrapper for more convenient way to call retrieveSingleItem from the outside
-    //(no need to open the session in client code).
+    /**
+     * Wrapper for more convenient way to call "retrieveSingleItem" from the outside
+     * (no need to open the session in client code).
+     * and thus not to change the code of the methods where it's used.
+     * @param	uniqueParameter   primary key of an item
+     * @return  an item with the provided primary key
+     */
     public final DBObject requestForSingleItem(Serializable uniqueParameter) throws ToDoListException {
 
         Session hibernateSession = null;
@@ -155,8 +184,16 @@ public abstract class APIToDoListDAO implements IToDoListDAO {
         }
     }
 
-    //Unlike the rest of IToDoListDAO methods this method CAN be overridden in subclasses ( for instance all the attributes of Task can be updated
-    //while for password in User it's better to write separate method resetPassword
+    /**
+     * Unlike the rest of IToDoListDAO methods, this method CAN be overridden in subclasses
+     * ( for instance all the attributes of Task can be updated
+      * while for password in User it's better to write separate method resetPassword
+     * @param	columnName
+     * @param	newValue
+     * @param	primaryKey
+     * @param	keyValue
+     * @return  true if update was successful
+     */
     @Override
     public boolean updateColumnValue(String columnName, Serializable newValue, String primaryKey, Serializable keyValue) throws ToDoListException {
 

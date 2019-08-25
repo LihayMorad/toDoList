@@ -1,10 +1,7 @@
 package il.ac.hit.todolist.validation;
 
-
-
 //This class is a set of input validators
 public class UtilityFunctions {
-
 
     //Method for task description validation
     public static void OnlyLettersNumbersAndSpaces(String inputString) throws IllegalArgumentException {

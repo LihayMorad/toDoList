@@ -19,21 +19,25 @@ public class Router extends HttpServlet {
     private static String packageName = "il.ac.hit.todolist.controller";
 //    private static final Logger LOGGER = Logger.getLogger(Router.class.getSimpleName());
 
-    // Constructor
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
     public Router() {
         super();
-    }
+    } // Constructor
 
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //System.out.println("~~~[doPost]~~~");
-
         doGet(request, response);
     }
 
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //System.out.println("~~~[doGet]~~~");
-
-//        LOGGER.info("@@@@@@@@@@@@@doPost"); // IN PROGRESS
+//        LOGGER.info("doPost"); // IN PROGRESS
 
         String splittedURL[] = request.getPathInfo().split("/");
         if (splittedURL.length < 3) {
@@ -42,9 +46,6 @@ public class Router extends HttpServlet {
         } else {
             String controller = splittedURL[1];
             String action = splittedURL[2];
-            //System.out.println("Controller: " + controller);
-            //System.out.println("Action: " + action);
-
             String controllerClassName = controller.substring(0, 1).toUpperCase() + controller.substring(1) + "Controller";
             //composing the controller class name
             try {
@@ -53,7 +54,6 @@ public class Router extends HttpServlet {
                 Object controllerInstance = constructor.newInstance(request, response);
                 Method requestedAction = type.getMethod(action);
                 requestedAction.invoke(controllerInstance);
-//            getServletContext().getRequestDispatcher("/" + action + ".jsp").forward(request, response);
 
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
                     SecurityException | IllegalArgumentException | InvocationTargetException e) {

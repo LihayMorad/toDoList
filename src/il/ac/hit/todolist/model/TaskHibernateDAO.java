@@ -13,7 +13,10 @@ public class TaskHibernateDAO extends APIToDoListDAO { // Singleton
         super();
     } // Constructor
 
-    //Static method to get an instance of singleton
+    /**
+     * Static method to get an instance of singleton
+     * @return  TaskHibernateDAO object
+     */
     public static TaskHibernateDAO getInstance() {
         if (uniqueInstance == null) {
             synchronized (lock) {

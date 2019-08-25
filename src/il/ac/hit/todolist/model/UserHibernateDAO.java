@@ -16,7 +16,6 @@ public class UserHibernateDAO extends APIToDoListDAO {
         super();
     }
 
-
     //Static method to get an instance of singleton
     public static UserHibernateDAO getInstance() {
         if (uniqueInstance == null) {
@@ -32,7 +31,6 @@ public class UserHibernateDAO extends APIToDoListDAO {
     protected String getTableName(){
         return "User";
     }
-
 
 
     // Method for user authentication

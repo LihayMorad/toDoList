@@ -7,7 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//This class provides switch between different screens ( in other words redirection from one jsp file to another)
+/**
+ * This class provides switch between different screens
+ * in other words: redirection from one jsp file to another
+ * helps the user navigate through pages
+ */
 public class NavigatorController extends Controller {
 
     public NavigatorController() { // constructor
@@ -18,6 +22,10 @@ public class NavigatorController extends Controller {
     }
 
     // router/navigator/location?goto=value
+    /**
+     * This function determines to which page to navigate
+     * by using the URL
+     */
     public void location() throws ToDoListException {
         try {
             String goTo = request.getParameter("goto");
