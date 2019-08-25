@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="il.ac.hit.todolist.model.Task" table="tasks">
+		<id name="taskID" type="int" column="taskID">
+			<generator class="increment" />
+		</id>
+		<property name="listID">
+			<column name="listID" />
+		</property>
+		<property name="description">
+			<column name="description" />
+		</property>
+		<property name="status">
+			<column name="status" />
+		</property>
+		<property name="deadline">
+			<column name="deadline" />
+		</property>
+	</class>
+</hibernate-mapping>
