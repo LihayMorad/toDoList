@@ -1,0 +1,15 @@
+body {
+    text-align: center;
+}
+
+.taskDone {
+    background-color: #afafaf;
+}
+
+.deadline {
+    float: right;
+}
+
+.errorMessage {
+    color: red;
+}

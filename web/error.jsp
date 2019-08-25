@@ -20,7 +20,7 @@
 
 </head>
 <body>
-<h2 class="text-danger">Error: <%=request.getAttribute("error")%></h2>
+<h2 class="alert alert-danger text-danger">Error: <%=request.getAttribute("error")%></h2>
 <a href="<%=request.getServletContext().getContextPath()%>" data-theme="c" data-role="button" data-icon="home"
    data-inline="true">Back to home page</a>
 

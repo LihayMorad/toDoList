@@ -40,13 +40,13 @@
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {
         %>
-        <p class="errorMessage"><%=errorMessage%>
+        <p class="alert alert-danger text-danger"><%=errorMessage%>
         </p>
         <% } %>
 
         <%
             List<Task> tasks = (List<Task>) request.getSession().getAttribute("tasks");
-            if (tasks != null) {
+            if (tasks.size() != 0) {
         %>
         <ol data-role="listview" data-filter="true">
             <%
@@ -57,7 +57,7 @@
                 <a href="<%=request.getServletContext().getContextPath()%>/router/navigator/location?goto=updatetask&taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>&status=<%=task.getStatus()%>"
                    data-rel="dialog" data-inline="true">
                     <%=task.getDescription()%>
-                    <span class="deadline float-right">(<%=deadline.toLocalDate() + ", " + deadline.toLocalTime()%>)</span>
+                    <p class="deadline float-right">(<%=deadline.toLocalDate() + ", " + deadline.toLocalTime()%>)</p>
                 </a>
                 <a href="<%=request.getServletContext().getContextPath()%>/router/task/deleteTask?taskID=<%=task.getTaskID()%>&listID=<%=task.getListID()%>"
                    data-inline="true" data-icon="delete">delete</a>
@@ -66,7 +66,7 @@
         </ol>
 
         <% } else { %>
-        <p>You list is empty.</p>
+        <p class="alert alert-info">Your list is empty.</p>
         <% } %>
     </div>
 

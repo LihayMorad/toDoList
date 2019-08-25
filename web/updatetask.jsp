@@ -32,7 +32,6 @@
         %>
 
         <form action="<%=request.getServletContext().getContextPath()%>/router/task/updateTaskStatus" method="post">
-            <%--            <input type="text" name="status" value="<%=request.getParameter("status")%>">--%>
             <div data-role="fieldcontain">
                 <label for="flipper">Task done:</label>
                 <select name="status" id="flipper" data-role="slider">

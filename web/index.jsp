@@ -51,8 +51,6 @@
            data-theme="b">My List</a>
     </div>
 
-    <button onclick="alert('JavaScript is working!')">JavaScript Test</button>
-
 </div>
 
 </body>

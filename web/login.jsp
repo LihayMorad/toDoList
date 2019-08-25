@@ -28,15 +28,13 @@
         <% String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {
         %>
-        <p class="errorMessage"><%=errorMessage%></p>
+        <p class="alert alert-danger text-danger"><%=errorMessage%></p>
         <% } %>
 
         <form method="post" action="${pageContext.request.contextPath}/router/user/login">
-            <input type="text" name="username" placeholder="Enter your username" id="loginUsername">
-            <input type="password" name="password" placeholder="Enter your password" id="loginPassword">
+            <input type="text" name="username" placeholder="Enter your username" id="loginUsername" required>
+            <input type="password" name="password" placeholder="Enter your password" id="loginPassword" required>
             <input data-role="button" type="submit" value="Submit">
-
-            <!-- <a data-role="button" data-inline="true">Forgot password?</a> -->
         </form>
 
     </div>
